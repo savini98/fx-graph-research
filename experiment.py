@@ -6,7 +6,7 @@ import time
 # ==== Config ====
 # Set to "microsoft/Phi-4-mini-instruct" or to a local snapshot directory containing a valid config.json
 MODEL_ID = "Phi-4-mini-instruct"
-NUM_RUNS = 5                      # total runs; the "middle" one will be profiled
+NUM_RUNS = 15                      # total runs; the "middle" one will be profiled
 MAX_NEW_TOKENS = 50              # cap generated length
 USE_NONCE_IN_PROMPT = False       # set True to append a tiny nonce to prompt
 TEMPERATURE_SCHEDULE = [0.8, 0.9, 1.0, 0.7, 1.1]
@@ -114,7 +114,7 @@ def run_one_generation(model, prompt_text, max_new_tokens, temperature, seed):
     text = tokenizer.decode(gen_out.sequences[0], skip_special_tokens=True)
     return gen_out, elapsed, new_tokens, text
 
-def profile_middle_run(model, run_idx_to_profile, prompt_text, temperature):
+def profile_run(model, run_idx_to_profile, prompt_text, temperature):
     """Profile exactly one run (CPU+CUDA) — the middle run — and write a trace."""
     device = next(model.parameters()).device
     os.makedirs('./profiler_logs', exist_ok=True)
@@ -164,9 +164,10 @@ def profile_middle_run(model, run_idx_to_profile, prompt_text, temperature):
             torch.cuda.synchronize()
         elapsed = time.time() - t0
         prof.step()  # optional boundary mark
+        # prof.export_chrome_trace("trace.json")
 
     # Export a single-run chrome trace (openable in chrome://tracing)
-    trace_path = f'./profiler_logs/middle_run_{run_idx_to_profile+1}.json'
+    trace_path = f'./profiler_logs/run_{MODEL_ID}_{run_idx_to_profile+1}.json'
     try:
         prof.export_chrome_trace(trace_path)
         print(f"[Profiler] Exported single-run trace to: {trace_path}")
@@ -228,12 +229,12 @@ with torch.no_grad():
         return_dict_in_generate=True,
     )
 
-# ==== Multi-run loop with only the middle run profiled ====
+# ==== Regular runs for timing stats (skip first run, do NUM_RUNS + 1 total) ====
 total_time = 0.0
 total_new_tokens = 0
-middle_idx = NUM_RUNS // 2  # 0-based index of the "middle" run
 
-for run_idx in range(NUM_RUNS):
+print("\n=== Running regular timing runs (first run skipped for warmup) ===")
+for run_idx in range(NUM_RUNS + 1):  # Add an extra run since we're skipping the first
     # Optionally vary the prompt with a nonce
     prompt = BASE_PROMPT
     if USE_NONCE_IN_PROMPT:
@@ -242,21 +243,19 @@ for run_idx in range(NUM_RUNS):
 
     temperature = TEMPERATURE_SCHEDULE[run_idx % len(TEMPERATURE_SCHEDULE)]
 
-    if run_idx == middle_idx:
-        # Profile only this run
-        elapsed, new_tokens, text = profile_middle_run(compiled_model, run_idx, prompt, temperature)
-    else:
-        # Regular (non-profiled) run
-        seed = int(time.time() * 1e6) % (2**31 - 1)
-        _, elapsed, new_tokens, text = run_one_generation(
-            compiled_model, prompt, MAX_NEW_TOKENS, temperature, seed
-        )
-
-    total_time += elapsed
-    total_new_tokens += new_tokens
+    # Regular run
+    seed = int(time.time() * 1e6) % (2**31 - 1)
+    _, elapsed, new_tokens, text = run_one_generation(
+        compiled_model, prompt, MAX_NEW_TOKENS, temperature, seed
+    )
+    
+    # Skip recording stats for the first run (run_idx == 0)
+    if run_idx > 0:
+        total_time += elapsed
+        total_new_tokens += new_tokens
     tps = (new_tokens / elapsed) if elapsed > 0 else float('inf')
 
-    print(f"\n--- Run {run_idx+1} / {NUM_RUNS} ---{' (PROFILED)' if run_idx == middle_idx else ''}")
+    print(f"\n--- Run {run_idx+1} / {NUM_RUNS} ---")
     print(f"Temp: {temperature}")
     print(f"Generated {new_tokens} new tokens in {elapsed:.3f}s ({tps:.2f} tok/s)")
     print("Output:")
@@ -266,7 +265,23 @@ for run_idx in range(NUM_RUNS):
 avg_time = total_time / NUM_RUNS
 time_per_token = (total_time / total_new_tokens) if total_new_tokens > 0 else float("inf")
 toks_per_sec = (total_new_tokens / total_time) if total_time > 0 else 0.0
-avg_toks_per_run = total_new_tokens / NUM_RUNS if NUM_RUNS > 0 else float("nan")
+avg_toks_per_run = total_new_tokens / NUM_RUNS
+
+# ==== Separate profiler run ====
+print("\n=== Running separate profiler run ===")
+prompt = BASE_PROMPT
+if USE_NONCE_IN_PROMPT:
+    nonce = torch.randint(0, 1_000_000, ()).item()
+    prompt = f"{BASE_PROMPT} [session:{nonce}]"
+
+temperature = TEMPERATURE_SCHEDULE[0]  # Use first temperature for profiler run
+elapsed, new_tokens, text = profile_run(compiled_model, 0, prompt, temperature)
+
+print(f"\n--- Profiler Run Results ---")
+print(f"Temp: {temperature}")
+print(f"Generated {new_tokens} new tokens in {elapsed:.3f}s ({(new_tokens/elapsed):.2f} tok/s)")
+print("Output:")
+print(text)
 
 print(f"\n=== Aggregate Stats (all runs; only middle run profiled) ===")
 print(f"Average runtime over {NUM_RUNS} runs: {avg_time:.4f} seconds")
