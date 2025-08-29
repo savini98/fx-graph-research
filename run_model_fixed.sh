@@ -53,7 +53,7 @@ if [ ! -f "Phi-4-mini-instruct/model-00001-of-00002.safetensors" ]; then
     exit 1
 fi
 
-cp modeling_phi3_fixed.py Phi-4-mini-instruct/modeling_phi3.py
+cp modeling_phi4_fixed.py Phi-4-mini-instruct/modeling_phi3.py
 # Run the experiment
 LOG_FILE="output_fixed_$(date +%Y%m%d_%H%M%S).log"
 python experiment.py > "$LOG_FILE"

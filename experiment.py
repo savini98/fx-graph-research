@@ -14,13 +14,6 @@ TOP_P = 0.95
 TOP_K = 50
 REPETITION_PENALTY = 1.08
 
-# (Optional) allow TF32 on Ampere or newer for extra GEMM speed
-try:
-    torch.backends.cuda.matmul.allow_tf32 = True
-    torch.backends.cudnn.allow_tf32 = True
-except Exception:
-    pass
-
 # ---- Load ----
 tokenizer = AutoTokenizer.from_pretrained(
     MODEL_ID,
@@ -65,7 +58,7 @@ def count_new_tokens(generate_out, inputs, model):
         prompt_lens = torch.tensor([inputs["input_ids"].shape[1]] * sequences.shape[0], device=sequences.device)
     per_item = sequences.shape[1] - prompt_lens
 
-    # Optionally exclude trailing EOS if present
+    # # Optionally exclude trailing EOS if present
     end_is_eos = torch.zeros(sequences.shape[0], dtype=torch.bool, device=sequences.device)
     if eos_ids:
         for eid in eos_ids:
@@ -175,13 +168,13 @@ def profile_run(model, run_idx_to_profile, prompt_text, temperature):
         print("[Profiler] Could not export chrome trace (safe to ignore).")
 
     # Print top kernels/operators for this one run
-    print(f"\n--- compiled_model CUDA Time (middle run only) ---")
+    print(f"\n--- compiled_model CUDA Time ---")
     try:
         print(prof.key_averages().table(sort_by='cuda_time_total', row_limit=10))
     except Exception:
         print("No CUDA profile available (CPU-only run).")
 
-    print(f"\n--- compiled_model Memory Usage (middle run only) ---")
+    print(f"\n--- compiled_model Memory Usage ---")
     print(prof.key_averages().table(sort_by='cuda_memory_usage', row_limit=5))
 
     # Return details to keep reporting consistent
