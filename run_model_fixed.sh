@@ -32,7 +32,7 @@ rm -rf ~/.cache/huggingface/modules/transformers_modules/Phi-4-mini-instruct
 
 git lfs install
 
-Remove existing clone if it exists
+# Remove existing clone if it exists
 if [ -d "Phi-4-mini-instruct" ]; then
     echo "Removing existing Phi-4-mini-instruct directory..."
     rm -rf Phi-4-mini-instruct

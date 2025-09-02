@@ -20,7 +20,7 @@ echo "Installing PyTorch, Transformers, and other dependencies..."
 pip install --upgrade pip
 # CUDA 11.8 wheels:
 pip install --index-url https://download.pytorch.org/whl/cu118 torch torchvision torchaudio
-pip install transformers==4.52.4 accelerate safetensors
+pip install transformers==4.52.4 accelerate safetensors pandas
 python -c "import torch; print(torch.__version__, torch.version.cuda)"
 # pip install -r requirements.txt
 # conda install pytorch -c pytorch -y
@@ -46,14 +46,4 @@ cd Phi-4-mini-instruct
 git lfs fsck
 git lfs pull
 cd ..
-
-# Check if model files exist and have the correct size
-if [ ! -f "Phi-4-mini-instruct/model-00001-of-00002.safetensors" ]; then
-    echo "Error: model file not found or not properly downloaded"
-    exit 1
-fi
-
-# Run the experiment
-LOG_FILE="output_$(date +%Y%m%d_%H%M%S).log"
-python experiment.py > "$LOG_FILE"
 

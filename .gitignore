@@ -1,0 +1,7 @@
+*.log
+*.csv
+*.sqlite
+*.nsys-rep
+*.bak
+profiler_logs/
+Phi-4-mini-instruct/
