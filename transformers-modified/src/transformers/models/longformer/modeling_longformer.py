@@ -1493,9 +1493,9 @@ class LongformerModel(LongformerPreTrainedModel):
 
         # this path should be recorded in the ONNX export, it is fine with padding_len == 0 as well
         if padding_len > 0:
-            logger.warning_once(
-                f"Input ids are automatically padded to be a multiple of `config.attention_window`: {attention_window}"
-            )
+            # logger.warning_once(
+            #     f"Input ids are automatically padded to be a multiple of `config.attention_window`: {attention_window}"
+            # )
             if input_ids is not None:
                 input_ids = nn.functional.pad(input_ids, (0, padding_len), value=pad_token_id)
             if position_ids is not None:

@@ -22,6 +22,7 @@ pip install matplotlib tiktoken
 pip install einops transformers_stream_generator
 pip install sentencepiece
 pip install protobuf
+pip install sacremoses
 python -c "import torch; print(torch.__version__, torch.version.cuda)"
 python -c "import transformers; print(transformers.__version__)"
 
@@ -40,5 +41,6 @@ pip install matplotlib tiktoken
 pip install einops transformers_stream_generator
 pip install sentencepiece
 pip install protobuf
+pip install sacremoses
 python -c "import torch; print(torch.__version__, torch.version.cuda)"
 python -c "import transformers; print(transformers.__version__)"
