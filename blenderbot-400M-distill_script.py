@@ -116,21 +116,21 @@ def detect_cudagraphs(fn, inp, trace="trace.json"):
                 if any(s in (getattr(e,'key',None) or getattr(e,'name','')) for s in suspects) }
     return bool(matched), sorted(matched)
 
-def print_graph_breaks(model, inp):
-    """
-    Print only the number of graph breaks detected by torch._dynamo.explain.
-    """
-    t("checking Dynamo graph breaks…")
-    try:
-        import torch._dynamo as dynamo
-        try:
-            result = dynamo.explain(model)(**inp)
-        except TypeError:
-            result = dynamo.explain(model, inp)
+# def print_graph_breaks(model, inp):
+#     """
+#     Print only the number of graph breaks detected by torch._dynamo.explain.
+#     """
+#     t("checking Dynamo graph breaks…")
+#     try:
+#         import torch._dynamo as dynamo
+#         try:
+#             result = dynamo.explain(model)(**inp)
+#         except TypeError:
+#             result = dynamo.explain(model, inp)
 
-        print(f"Graph breaks: {result}")
-    except Exception as e:
-        t(f"graph-break analysis failed: {e}.")
+#         print(f"Graph breaks: {result}")
+#     except Exception as e:
+#         t(f"graph-break analysis failed: {e}.")
 
 # ----------------------------- generation -----------------------------
 @torch.inference_mode()
@@ -273,7 +273,6 @@ def main():
     print(f"Avg runtime:      {avg_runtime:.3f} s")
     print(f"Avg new tokens:   {avg_new_tokens:.1f}")
     print(inspect.getfile(compiled.__class__))
-    print_graph_breaks(compiled, batch)
     
 
     t("done")
