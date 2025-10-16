@@ -385,14 +385,14 @@ class Phi3RotaryEmbedding(nn.Module):
         self.original_inv_freq = self.original_inv_freq.to(device)
         self.register_buffer("inv_freq", self.original_inv_freq, persistent=False)
 
-        # if not hasattr(self, "long_inv_freq"):
-        #     self.long_inv_freq, _ = self.rope_init_fn(self.config, device, seq_len=original_max_position_embeddings + 1)
+        if not hasattr(self, "long_inv_freq"):
+            self.long_inv_freq, _ = self.rope_init_fn(self.config, device, seq_len=original_max_position_embeddings + 1)
 
-        # self.original_inv_freq = self.original_inv_freq.to(device)
+        self.original_inv_freq = self.original_inv_freq.to(device)
 
-        # condition = seq_len > original_max_position_embeddings
-        # inv_freq = torch.where(condition, self.long_inv_freq, self.original_inv_freq)
-        # self.register_buffer("inv_freq", inv_freq, persistent=False)
+        condition = seq_len > original_max_position_embeddings
+        inv_freq = torch.where(condition, self.long_inv_freq, self.original_inv_freq)
+        self.register_buffer("inv_freq", inv_freq, persistent=False)
 
 
 PHI3_START_DOCSTRING = r"""
