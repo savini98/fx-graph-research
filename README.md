@@ -41,4 +41,10 @@ bash run_qwen_audio_chat.sh
 
 # Run tiny-random-PegasusForCausalLM
 bash run_tiny-random-PegasusForCausalLM.sh
+
+# Run longformer-scico
+bash run_longformer_scico.sh
+
+# Run BioGPT
+bash run_biogpt.sh
 ```
