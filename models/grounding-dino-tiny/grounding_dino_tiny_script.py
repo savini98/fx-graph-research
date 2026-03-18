@@ -69,8 +69,11 @@ def make_batch(processor, bs=1):
     return batch
 
 def compile_model(m):
-    t("compiling with torch.compile (inductor, reduce-overhead)…")
-    return torch.compile(m, backend="inductor", mode="reduce-overhead", fullgraph=False)
+    # Grounding DINO has 17 graph breaks (data-dependent branching, dynamic shapes, etc.)
+    # which makes reduce-overhead (CUDA Graphs) hang on empty graph captures.
+    # Use default mode for kernel fusion only.
+    t("compiling with torch.compile (inductor, default)…")
+    return torch.compile(m, backend="inductor", mode="default", fullgraph=False)
 
 @torch.inference_mode()
 def warmup(fn, inp, iters=1):
