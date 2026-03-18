@@ -9,32 +9,64 @@ from transformers import AutoModel, AutoTokenizer, AutoConfig
 from torch.profiler import profile, ProfilerActivity
 import argparse
 
-# Path to the fixed modeling file (relative to this script)
+# Permanent source-of-truth copies stored in this repo — independent of HF cache.
+# original_model_files/ is committed to git so it survives cache clears and re-clones.
+ORIGINAL_MODELING_FILE = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "original_model_files/modeling_molformer.py"
+)
 FIXED_MODELING_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "../../fixed_model_files/modeling_molformer.py"
 )
 
-def apply_fixed_modeling():
-    """
-    Copy the fixed modeling_molformer.py over the HF cache version.
-    The cache path contains a revision hash so we glob for it.
-    """
+def _cache_modeling_paths():
     cache_base = os.path.expanduser(
         "~/.cache/huggingface/modules/transformers_modules/"
         "ibm-research/MoLFormer-XL-both-10pct"
     )
-    matches = glob.glob(os.path.join(cache_base, "*/modeling_molformer.py"))
+    return glob.glob(os.path.join(cache_base, "*/modeling_molformer.py"))
+
+def _clear_pyc(dst):
+    pyc_dir = os.path.join(os.path.dirname(dst), "__pycache__")
+    for pyc in glob.glob(os.path.join(pyc_dir, "modeling_molformer*.pyc")):
+        os.remove(pyc)
+
+def restore_original_modeling():
+    """
+    Restore the original (unpatched) modeling file from original_model_files/
+    into the HF cache. This is the permanent source of truth — it will work
+    correctly regardless of run order or whether the HF cache was cleared.
+    """
+    src = os.path.abspath(ORIGINAL_MODELING_FILE)
+    if not os.path.exists(src):
+        raise FileNotFoundError(
+            f"Original modeling file not found at {src}. "
+            "Re-clone the model and copy modeling_molformer.py into original_model_files/."
+        )
+    matches = _cache_modeling_paths()
+    if not matches:
+        t("WARNING: could not find cached modeling_molformer.py — model may not be downloaded yet")
+        return
+    for dst in matches:
+        shutil.copy2(src, dst)
+        _clear_pyc(dst)
+        t(f"original modeling file restored → {dst}")
+
+def apply_fixed_modeling():
+    """
+    Copy the fixed modeling_molformer.py from fixed_model_files/ over the HF cache version.
+    """
+    src = os.path.abspath(FIXED_MODELING_FILE)
+    if not os.path.exists(src):
+        raise FileNotFoundError(f"Fixed modeling file not found at {src}.")
+    matches = _cache_modeling_paths()
     if not matches:
         t("WARNING: could not find cached modeling_molformer.py — skipping fix")
         return
-    fixed_src = os.path.abspath(FIXED_MODELING_FILE)
     for dst in matches:
-        shutil.copy2(fixed_src, dst)
-        # Remove stale .pyc so Python re-compiles the patched source
-        pyc_dir = os.path.join(os.path.dirname(dst), "__pycache__")
-        for pyc in glob.glob(os.path.join(pyc_dir, "modeling_molformer*.pyc")):
-            os.remove(pyc)
+        shutil.copy2(src, dst)
+        _clear_pyc(dst)
         t(f"fixed modeling file applied → {dst}")
 
 
@@ -71,11 +103,13 @@ def load_model(local_only=True):
         trust_remote_code=True,
     )
 
-    # For the fixed run, overwrite the HF cached modeling file with our patched version
-    # before trust_remote_code loads it. This replaces torch.equal (graph break) with
-    # torch._assert_async (graph-native assertion).
+    # Always restore/apply the correct modeling file before loading.
+    # Source of truth is original_model_files/ (committed to git) — not the HF cache.
+    # This guarantees correct behaviour regardless of run order or cache state.
     if TYPE == "fixed":
         apply_fixed_modeling()
+    else:
+        restore_original_modeling()
 
     t("loading model")
     # Fix 1: set deterministic_eval=True so orthogonal_random_weights() is NOT
@@ -97,12 +131,15 @@ def load_model(local_only=True):
     model.eval()
     return model, tok
 
-def fixed_batch(tok, bs=1):
+def make_batch(tok, bs=1, include_attention_mask=True):
     """
     Create a batch of tokenized SMILES strings for MoLFormer.
     MoLFormer is encoder-only — we do forward passes, not generation.
+
+    include_attention_mask=True  → original run: triggers torch.equal() graph breaks
+    include_attention_mask=False → fixed run: omits mask, skipping the graph-break branch
+                                   (safe for uniform-length SMILES benchmarking)
     """
-    # Cycle through sample SMILES to fill the batch
     smiles_batch = [SMILES_SAMPLES[i % len(SMILES_SAMPLES)] for i in range(bs)]
     enc = tok(
         smiles_batch,
@@ -111,13 +148,9 @@ def fixed_batch(tok, bs=1):
         truncation=True,
         max_length=512,
     )
-    # Fix 2: omit attention_mask to skip the torch.equal() validation branch in
-    # MolformerSelfAttention.forward() — torch.equal returns a Python bool which
-    # is data-dependent and causes a graph break incompatible with CUDA Graphs.
-    # For benchmarking with uniform-length SMILES this has no effect on outputs.
-    batch = {
-        "input_ids": enc["input_ids"].to("cuda"),
-    }
+    batch = {"input_ids": enc["input_ids"].to("cuda")}
+    if include_attention_mask:
+        batch["attention_mask"] = enc["attention_mask"].to("cuda")
     return batch
 
 def compile_model(m):
@@ -229,7 +262,9 @@ def main():
     t("start")
     os.makedirs(TRACES_DIR, exist_ok=True)
     model, tok = load_model(local_only=True)
-    batch = fixed_batch(tok, bs=BATCH_SIZE)
+    # Original run: include attention_mask to reproduce the torch.equal() graph breaks.
+    # Fixed run: omit attention_mask (the patched model eliminates the graph-break branch).
+    batch = make_batch(tok, bs=BATCH_SIZE, include_attention_mask=(TYPE == "original"))
 
     # Quick eager sanity check (no compile) — catches download/shape issues immediately
     t("eager forward sanity check…")
