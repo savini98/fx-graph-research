@@ -17,7 +17,7 @@ echo "Running grounding-dino-tiny original model..."
 python grounding_dino_tiny_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 8 2>&1 | tee traces/grounding_dino_tiny_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 2 2>&1 | tee traces/grounding_dino_tiny_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running grounding-dino-tiny original model."
 
@@ -33,4 +33,4 @@ echo "Running grounding-dino-tiny fixed model..."
 python grounding_dino_tiny_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 8 2>&1 | tee traces/grounding_dino_tiny_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 2 2>&1 | tee traces/grounding_dino_tiny_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
