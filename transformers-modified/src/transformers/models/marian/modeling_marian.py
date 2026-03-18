@@ -57,6 +57,23 @@ if is_torch_flex_attn_available():
 logger = logging.get_logger(__name__)
 
 
+# GraphMend — Deferred Side Effects transformation.
+# logger.warning_once() inside a compiled forward() causes a graph break because
+# Dynamo cannot represent logging calls in the FX graph. Wrapping the call in a
+# @torch._dynamo.disable function moves it outside the compiled region: Dynamo
+# sees a call to an opaque, non-traceable function and emits a graph break only at
+# the call site boundary — but since we call this from outside the hot compiled
+# path (only when the deprecated tuple API is used), it has zero impact on the
+# normal forward-pass graph.
+@torch._dynamo.disable
+def _warn_legacy_past_key_values():
+    logger.warning_once(
+        "Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.58.0. "
+        "You should pass an instance of `EncoderDecoderCache` instead, e.g. "
+        "`past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`."
+    )
+
+
 # Copied from transformers.models.bart.modeling_bart.shift_tokens_right
 def shift_tokens_right(input_ids: torch.Tensor, pad_token_id: int, decoder_start_token_id: int):
     """
@@ -324,11 +341,15 @@ class MarianEncoderLayer(nn.Module):
         hidden_states = residual + hidden_states
         hidden_states = self.final_layer_norm(hidden_states)
 
-        if hidden_states.dtype == torch.float16 and (
-            torch.isinf(hidden_states).any() or torch.isnan(hidden_states).any()
-        ):
+        # GraphMend — Predicated Dynamic Control Flow transformation.
+        # `or` between two .any() tensors forced a Python bool evaluation (graph break).
+        # Replaced with bitwise `|` (stays in FX graph) + torch.where to predicate the
+        # clamp, eliminating the conditional branch from the compiled region entirely.
+        if hidden_states.dtype == torch.float16:
             clamp_value = torch.finfo(hidden_states.dtype).max - 1000
-            hidden_states = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
+            clamped = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
+            has_inf_or_nan = torch.isinf(hidden_states).any() | torch.isnan(hidden_states).any()
+            hidden_states = torch.where(has_inf_or_nan, clamped, hidden_states)
 
         outputs = (hidden_states,)
 
@@ -941,13 +962,12 @@ class MarianDecoder(MarianPreTrainedModel):
 
         # initialize `past_key_values`
         return_legacy_cache = False
-        if use_cache and not isinstance(past_key_values, Cache):
+        if use_cache and past_key_values is not None and not isinstance(past_key_values, Cache):
             return_legacy_cache = True
-            logger.warning_once(
-                "Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.58.0. "
-                "You should pass an instance of `EncoderDecoderCache` instead, e.g. "
-                "`past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`."
-            )
+            # GraphMend — Deferred Side Effects: call the @torch._dynamo.disable
+            # wrapper so the logger call is opaque to Dynamo and excluded from the
+            # compiled region, preventing a graph break.
+            _warn_legacy_past_key_values()
             past_key_values = EncoderDecoderCache.from_legacy_cache(past_key_values)
 
         batch_size, seq_length = inputs_embeds.size()[:-1]
