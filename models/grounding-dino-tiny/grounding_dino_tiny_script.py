@@ -69,16 +69,14 @@ def make_batch(processor, bs=1):
     return batch
 
 def compile_model(m):
-    # Grounding DINO has 17 graph breaks (data-dependent branching, dynamic shapes, etc.)
-    # which makes reduce-overhead (CUDA Graphs) hang on empty graph captures.
-    # Use default mode for kernel fusion only.
-    t("compiling with torch.compile (inductor, default)…")
-    return torch.compile(m, backend="inductor", mode="default", fullgraph=False)
+    t("compiling with torch.compile (inductor, reduce-overhead)…")
+    return torch.compile(m, backend="inductor", mode="reduce-overhead", fullgraph=False)
 
 @torch.inference_mode()
 def warmup(fn, inp, iters=1):
     t(f"warmup x{iters}…")
     for _ in range(iters):
+        torch.compiler.cudagraph_mark_step_begin()
         fn(**inp)
         torch.cuda.synchronize()
 
@@ -86,18 +84,25 @@ def warmup(fn, inp, iters=1):
 def detect_cudagraphs(fn, inp, trace="trace.json"):
     t("profiling one step…")
     with profile(activities=[ProfilerActivity.CUDA, ProfilerActivity.CPU], with_stack=False) as prof:
+        torch.compiler.cudagraph_mark_step_begin()
         fn(**inp)
         torch.cuda.synchronize()
+        torch.compiler.cudagraph_mark_step_begin()
         fn(**inp)
         torch.cuda.synchronize()
+        torch.compiler.cudagraph_mark_step_begin()
         fn(**inp)
         torch.cuda.synchronize()
+        torch.compiler.cudagraph_mark_step_begin()
         fn(**inp)
         torch.cuda.synchronize()
+        torch.compiler.cudagraph_mark_step_begin()
         fn(**inp)
         torch.cuda.synchronize()
+        torch.compiler.cudagraph_mark_step_begin()
         fn(**inp)
         torch.cuda.synchronize()
+        torch.compiler.cudagraph_mark_step_begin()
         fn(**inp)
         torch.cuda.synchronize()
     try:
@@ -144,6 +149,7 @@ def run_forward(
         torch.cuda.synchronize()
     start = time.time()
 
+    torch.compiler.cudagraph_mark_step_begin()
     out = model(**batch)
 
     if torch.cuda.is_available():
