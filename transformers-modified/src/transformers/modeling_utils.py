@@ -1608,12 +1608,9 @@ class ModuleUtilsMixin:
         if dtype is None:
             dtype = self.dtype
 
-        if not (attention_mask.dim() == 2 and self.config.is_decoder):
-            # show warning only if it won't be shown in `create_extended_attention_mask_for_decoder`
-            if device is not None:
-                warnings.warn(
-                    "The `device` argument is deprecated and will be removed in v5 of Transformers.", FutureWarning
-                )
+        # GraphMend fix: Deferred Side Effects (Transformation #2)
+        # Removed warnings.warn() — pure side effect that causes a graph break
+        # (unsupported Python builtin _warnings.warn) with no computational value.
         # We can provide a self-attention mask of dimensions [batch_size, from_seq_length, to_seq_length]
         # ourselves in which case we just need to make it broadcastable to all heads.
         if attention_mask.dim() == 3:
