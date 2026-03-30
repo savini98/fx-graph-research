@@ -41,3 +41,10 @@ python rebel_large_script.py \
     --type $FIXED \
     --runs 30 \
     --batch_size 150 2>&1 | tee traces/rebel_large_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+
+# Clean up cloned model files to free disk space
+if [ -d "rebel-large" ]; then
+    echo "Cleaning up cloned model files for rebel-large..."
+    rm -rf "rebel-large"
+    echo "Cleanup complete."
+fi

@@ -211,7 +211,7 @@ def main():
     warmup_pipeline(pipeline, context, PREDICTION_LENGTH, iters=1)
 
     dt_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-    safe_model_id = MODEL_ID.replace("/", "_")
+    safe_model_id = os.path.basename(MODEL_ID)
     trace_path = os.path.join(TRACES_DIR, f"{safe_model_id}_trace_{TYPE}_{dt_str}.json")
     hit, names = detect_cudagraphs_pipeline(pipeline, context, PREDICTION_LENGTH, trace=trace_path)
     if hit:

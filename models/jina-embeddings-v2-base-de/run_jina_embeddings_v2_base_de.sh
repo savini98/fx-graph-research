@@ -64,3 +64,10 @@ python jina_embeddings_v2_base_de_script.py \
     --type $FIXED \
     --runs 30 \
     --batch_size 64 2>&1 | tee traces/jina_embeddings_v2_base_de_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+
+# Clean up cloned model files to free disk space
+if [ -d "jina-embeddings-v2-base-de" ]; then
+    echo "Cleaning up cloned model files for jina-embeddings-v2-base-de..."
+    rm -rf "jina-embeddings-v2-base-de"
+    echo "Cleanup complete."
+fi

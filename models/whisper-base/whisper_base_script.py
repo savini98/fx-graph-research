@@ -14,7 +14,7 @@ import argparse
 
 TYPE = "original"  # Set your desired type label here
 BATCH_SIZE = 16  # Set your desired batch size here (whisper mel inputs are memory-heavy)
-MODEL_ID = "openai/whisper-base"
+MODEL_ID = os.path.join(os.path.dirname(os.path.abspath(__file__)), "whisper-base")
 OUTPUT_TOKEN_LENGTH = 100  # Set your desired output token length limit here
 
 # Resolve paths relative to this script's directory
@@ -194,7 +194,7 @@ def main():
     warmup(compiled, batch, iters=1)
 
     dt_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-    safe_model_id = MODEL_ID.replace("/", "_")
+    safe_model_id = os.path.basename(MODEL_ID)
     trace_path = os.path.join(TRACES_DIR, f"{safe_model_id}_trace_{TYPE}_{dt_str}.json")
     hit, names = detect_cudagraphs(compiled, batch, trace=trace_path)
     if hit:

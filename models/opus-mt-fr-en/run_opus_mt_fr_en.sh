@@ -7,6 +7,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 mkdir -p traces
 mkdir -p original_model_files
+
+# Clone model locally if not already present
+if [ ! -d "opus-mt-fr-en" ]; then
+    echo "Cloning model..."
+    git clone https://huggingface.co/Helsinki-NLP/opus-mt-fr-en opus-mt-fr-en
+fi
 echo "Activating conda environment..."
 source $(conda info --base)/etc/profile.d/conda.sh
 conda activate "${ORIGINAL}_env"
@@ -34,3 +40,10 @@ python opus_mt_fr_en_script.py \
     --type $FIXED \
     --runs 30 \
     --batch_size 150 2>&1 | tee traces/opus_mt_fr_en_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+
+# Clean up cloned model files to free disk space
+if [ -d "opus-mt-fr-en" ]; then
+    echo "Cleaning up cloned model files for opus-mt-fr-en..."
+    rm -rf "opus-mt-fr-en"
+    echo "Cleanup complete."
+fi

@@ -40,3 +40,10 @@ python inclusively_reformulation_it5_script.py \
     --type $FIXED \
     --runs 30 \
     --batch_size 150 2>&1 | tee traces/inclusively_reformulation_it5_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+
+# Clean up cloned model files to free disk space
+if [ -d "model_weights" ]; then
+    echo "Cleaning up cloned model files for inclusively-reformulation-it5..."
+    rm -rf "model_weights"
+    echo "Cleanup complete."
+fi

@@ -16,7 +16,7 @@ import numpy as np
 
 TYPE = "original"  # Set your desired type label here
 BATCH_SIZE = 16  # Set your desired batch size here (multimodal, memory-heavy)
-MODEL_ID = "microsoft/layoutlmv3-base"
+MODEL_ID = os.path.join(os.path.dirname(os.path.abspath(__file__)), "layoutlmv3-base")
 
 # Resolve paths relative to this script's directory
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -206,7 +206,7 @@ def main():
     warmup(compiled, batch, iters=1)
 
     dt_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-    safe_model_id = MODEL_ID.replace("/", "_")
+    safe_model_id = os.path.basename(MODEL_ID)
     trace_path = os.path.join(TRACES_DIR, f"{safe_model_id}_trace_{TYPE}_{dt_str}.json")
     hit, names = detect_cudagraphs(compiled, batch, trace=trace_path)
     if hit:

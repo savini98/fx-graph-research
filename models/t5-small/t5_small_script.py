@@ -14,7 +14,7 @@ import argparse
 
 TYPE = "original"  # Set your desired type label here
 BATCH_SIZE = 100  # Set your desired batch size here
-MODEL_ID = "t5-small"
+MODEL_ID = os.path.join(os.path.dirname(os.path.abspath(__file__)), "t5-small")
 OUTPUT_TOKEN_LENGTH = 100  # Set your desired output token length limit here
 PROMPT = "translate English to German: Write a poem about AI"
 
