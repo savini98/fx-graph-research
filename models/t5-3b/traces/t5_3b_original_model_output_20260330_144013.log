@@ -1,0 +1,26 @@
+Conda environment: original_env
+[14:40:15] start
+[14:40:15] loading tokenizer…
+[14:40:15] loading model
+[GPU] NVIDIA GeForce RTX 3090, 23.5 GB VRAM
+[GPU] Baseline memory (model loaded): 6.81 GB
+Asking to truncate to max_length but no maximum length is provided and the model has no predefined maximum length. Default to no truncation.
+Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.48.0. You should pass an instance of `EncoderDecoderCache` instead, e.g. `past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`.
+[GPU] Probe batch_size=8: peak=6.86 GB, per_sample=6.0 MB
+[GPU] Available for batches: 9.66 GB (target 70% utilization)
+[GPU] Estimated batch size: 1638
+[GPU] Verified: batch_size=1638 fits (peak 14.87 GB) ✅
+[14:40:20] using batch_size=1638
+[14:40:20] eager forward sanity check…
+[14:40:21] eager ok
+[14:40:21] checking Dynamo graph breaks…
+[14:40:26] graph-break analysis failed: CUDA out of memory. Tried to allocate 1.20 GiB. GPU 0 has a total capacity of 23.54 GiB of which 1.02 GiB is free. Including non-PyTorch memory, this process has 22.48 GiB memory in use. Of the allocated memory 21.92 GiB is allocated by PyTorch, and 260.28 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+[14:40:26] compiling with torch.compile (inductor, reduce-overhead)…
+[14:40:26] warmup x1…
+/home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/torch/_inductor/lowering.py:7007: UserWarning: 
+Online softmax is disabled on the fly since Inductor decides to
+split the reduction. Cut an issue to PyTorch if this is an
+important use case and you want to speed it up with online
+softmax.
+
+  warnings.warn(

@@ -1,0 +1,158 @@
+Conda environment: fixed_env
+[15:50:06] start
+[15:50:06] loading processor…
+[15:50:06] loading model
+[GPU] NVIDIA GeForce RTX 3090, 23.5 GB VRAM
+[GPU] Baseline memory (model loaded): 0.14 GB
+[GPU] Probe batch_size=8: peak=0.31 GB, per_sample=22.1 MB
+[GPU] Available for batches: 16.34 GB (target 70% utilization)
+[GPU] Estimated batch size: 151
+[GPU] Verified: batch_size=151 fits (peak 3.24 GB) ✅
+[15:50:07] using batch_size=151
+[15:50:07] eager forward sanity check…
+[15:50:08] eager ok
+[15:50:08] checking Dynamo graph breaks…
+[15:50:09] graph-break analysis failed: CUDA out of memory. Tried to allocate 886.00 MiB. GPU 0 has a total capacity of 23.54 GiB of which 454.56 MiB is free. Including non-PyTorch memory, this process has 23.06 GiB memory in use. Of the allocated memory 22.57 GiB is allocated by PyTorch, and 193.17 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+[15:50:09] compiling with torch.compile (inductor, reduce-overhead)…
+[15:50:10] warmup x1…
+[15:50:22] profiling one step…
+[15:50:24] chrome trace saved: /home/savini98/repos/fx-graph-research/models/whisper-base/traces/whisper-base_trace_fixed_20260330_155022.json
+[15:50:24] ✅ CUDA Graph activity detected:
+  - cudaGraphDestroy
+  - cudaGraphGetNodes
+  - cudaGraphInstantiateWithFlags
+  - cudaGraphLaunch
+[15:50:24] benchmarking 30 timed runs…
+[15:50:24] run 1/30…
+Due to a bug fix in https://github.com/huggingface/transformers/pull/28687 transcription using a multilingual Whisper will default to language detection followed by transcription instead of translation to English.This might be a breaking change for your use case. If you want to instead always translate your audio to English, make sure to pass `language='en'`.
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+[15:50:25] ⏱ Runtime: 0.824 s
+[15:50:25] 📝 Raw new tokens generated: 4
+[15:50:25] 🚀 Throughput: 4.85 tokens/s
+[15:50:25] run 2/30…
+[15:50:26] ⏱ Runtime: 0.751 s
+[15:50:26] 📝 Raw new tokens generated: 4
+[15:50:26] 🚀 Throughput: 5.33 tokens/s
+[15:50:26] run 3/30…
+[15:50:27] ⏱ Runtime: 0.752 s
+[15:50:27] 📝 Raw new tokens generated: 4
+[15:50:27] 🚀 Throughput: 5.32 tokens/s
+[15:50:27] run 4/30…
+[15:50:28] ⏱ Runtime: 0.753 s
+[15:50:28] 📝 Raw new tokens generated: 4
+[15:50:28] 🚀 Throughput: 5.31 tokens/s
+[15:50:28] run 5/30…
+[15:50:29] ⏱ Runtime: 0.752 s
+[15:50:29] 📝 Raw new tokens generated: 4
+[15:50:29] 🚀 Throughput: 5.32 tokens/s
+[15:50:29] run 6/30…
+[15:50:30] ⏱ Runtime: 0.755 s
+[15:50:30] 📝 Raw new tokens generated: 4
+[15:50:30] 🚀 Throughput: 5.30 tokens/s
+[15:50:30] run 7/30…
+[15:50:31] ⏱ Runtime: 0.753 s
+[15:50:31] 📝 Raw new tokens generated: 4
+[15:50:31] 🚀 Throughput: 5.31 tokens/s
+[15:50:31] run 8/30…
+[15:50:32] ⏱ Runtime: 0.754 s
+[15:50:32] 📝 Raw new tokens generated: 4
+[15:50:32] 🚀 Throughput: 5.31 tokens/s
+[15:50:32] run 9/30…
+[15:50:33] ⏱ Runtime: 0.753 s
+[15:50:33] 📝 Raw new tokens generated: 4
+[15:50:33] 🚀 Throughput: 5.31 tokens/s
+[15:50:33] run 10/30…
+[15:50:34] ⏱ Runtime: 0.753 s
+[15:50:34] 📝 Raw new tokens generated: 4
+[15:50:34] 🚀 Throughput: 5.31 tokens/s
+[15:50:34] run 11/30…
+[15:50:35] ⏱ Runtime: 0.754 s
+[15:50:35] 📝 Raw new tokens generated: 4
+[15:50:35] 🚀 Throughput: 5.30 tokens/s
+[15:50:35] run 12/30…
+[15:50:36] ⏱ Runtime: 0.754 s
+[15:50:36] 📝 Raw new tokens generated: 4
+[15:50:36] 🚀 Throughput: 5.30 tokens/s
+[15:50:36] run 13/30…
+[15:50:37] ⏱ Runtime: 0.755 s
+[15:50:37] 📝 Raw new tokens generated: 4
+[15:50:37] 🚀 Throughput: 5.30 tokens/s
+[15:50:37] run 14/30…
+[15:50:38] ⏱ Runtime: 0.754 s
+[15:50:38] 📝 Raw new tokens generated: 4
+[15:50:38] 🚀 Throughput: 5.30 tokens/s
+[15:50:38] run 15/30…
+[15:50:39] ⏱ Runtime: 0.754 s
+[15:50:39] 📝 Raw new tokens generated: 4
+[15:50:39] 🚀 Throughput: 5.31 tokens/s
+[15:50:39] run 16/30…
+[15:50:40] ⏱ Runtime: 0.755 s
+[15:50:40] 📝 Raw new tokens generated: 4
+[15:50:40] 🚀 Throughput: 5.30 tokens/s
+[15:50:40] run 17/30…
+[15:50:40] ⏱ Runtime: 0.755 s
+[15:50:40] 📝 Raw new tokens generated: 4
+[15:50:40] 🚀 Throughput: 5.30 tokens/s
+[15:50:41] run 18/30…
+[15:50:41] ⏱ Runtime: 0.755 s
+[15:50:41] 📝 Raw new tokens generated: 4
+[15:50:41] 🚀 Throughput: 5.30 tokens/s
+[15:50:42] run 19/30…
+[15:50:42] ⏱ Runtime: 0.757 s
+[15:50:42] 📝 Raw new tokens generated: 4
+[15:50:42] 🚀 Throughput: 5.28 tokens/s
+[15:50:43] run 20/30…
+[15:50:43] ⏱ Runtime: 0.756 s
+[15:50:43] 📝 Raw new tokens generated: 4
+[15:50:43] 🚀 Throughput: 5.29 tokens/s
+[15:50:44] run 21/30…
+[15:50:44] ⏱ Runtime: 0.756 s
+[15:50:44] 📝 Raw new tokens generated: 4
+[15:50:44] 🚀 Throughput: 5.29 tokens/s
+[15:50:45] run 22/30…
+[15:50:45] ⏱ Runtime: 0.756 s
+[15:50:45] 📝 Raw new tokens generated: 4
+[15:50:45] 🚀 Throughput: 5.29 tokens/s
+[15:50:45] run 23/30…
+[15:50:46] ⏱ Runtime: 0.757 s
+[15:50:46] 📝 Raw new tokens generated: 4
+[15:50:46] 🚀 Throughput: 5.29 tokens/s
+[15:50:46] run 24/30…
+[15:50:47] ⏱ Runtime: 0.758 s
+[15:50:47] 📝 Raw new tokens generated: 4
+[15:50:47] 🚀 Throughput: 5.28 tokens/s
+[15:50:47] run 25/30…
+[15:50:48] ⏱ Runtime: 0.759 s
+[15:50:48] 📝 Raw new tokens generated: 4
+[15:50:48] 🚀 Throughput: 5.27 tokens/s
+[15:50:48] run 26/30…
+[15:50:49] ⏱ Runtime: 0.759 s
+[15:50:49] 📝 Raw new tokens generated: 4
+[15:50:49] 🚀 Throughput: 5.27 tokens/s
+[15:50:49] run 27/30…
+[15:50:50] ⏱ Runtime: 0.758 s
+[15:50:50] 📝 Raw new tokens generated: 4
+[15:50:50] 🚀 Throughput: 5.28 tokens/s
+[15:50:50] run 28/30…
+[15:50:51] ⏱ Runtime: 0.757 s
+[15:50:51] 📝 Raw new tokens generated: 4
+[15:50:51] 🚀 Throughput: 5.28 tokens/s
+[15:50:51] run 29/30…
+[15:50:52] ⏱ Runtime: 0.758 s
+[15:50:52] 📝 Raw new tokens generated: 4
+[15:50:52] 🚀 Throughput: 5.27 tokens/s
+[15:50:52] run 30/30…
+[15:50:53] ⏱ Runtime: 0.759 s
+[15:50:53] 📝 Raw new tokens generated: 4
+[15:50:53] 🚀 Throughput: 5.27 tokens/s
+
+===== Benchmark summary =====
+Timed runs:       30
+Avg throughput:   5.28 tokens/s
+P50 throughput:   5.30 tokens/s
+P95 throughput:   5.32 tokens/s
+Std dev (tps):    0.08
+Avg runtime:      0.758 s
+Avg new tokens:   4.0
+/home/savini98/repos/fx-graph-research/transformers-modified/src/transformers/models/whisper/modeling_whisper.py
+[15:50:53] done

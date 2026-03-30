@@ -1,9 +1,42 @@
 """
 Shared GPU utilities for all model benchmark scripts.
-Provides auto batch size detection to maximize GPU utilization without OOM.
+Provides auto batch size detection and safe graph break analysis.
 """
 import torch
 import gc
+
+
+def safe_explain(model, batch, make_small_batch_fn=None, verbose_fn=print):
+    """
+    Run torch._dynamo.explain with OOM protection.
+    If the full batch OOMs during tracing, retries with batch_size=2.
+
+    Args:
+        model: the model to explain
+        batch: the full batch dict
+        make_small_batch_fn: optional callable(bs) -> small batch for retry
+        verbose_fn: print function (e.g. the script's t() function)
+    """
+    import torch._dynamo as dynamo
+
+    try:
+        explanation = dynamo.explain(model)(**batch)
+        return explanation
+    except (torch.cuda.OutOfMemoryError, RuntimeError) as e:
+        if "out of memory" in str(e).lower():
+            torch.cuda.empty_cache()
+            gc.collect()
+            if make_small_batch_fn is not None:
+                verbose_fn("dynamo.explain OOM'd, retrying with small batch...")
+                small = make_small_batch_fn(2)
+                explanation = dynamo.explain(model)(**small)
+                del small
+                torch.cuda.empty_cache()
+                gc.collect()
+                return explanation
+            else:
+                raise
+        raise
 
 
 def find_max_batch_size(make_batch_fn, model_fn, min_bs=1, max_bs=2048,
@@ -86,16 +119,17 @@ def find_max_batch_size(make_batch_fn, model_fn, min_bs=1, max_bs=2048,
     model_gb = baseline_mem / (1024**3)
     if model_gb > 3.0:
         # Large models (t5-3b, whisper-large-v3): generation KV cache is huge
-        gen_multiplier = 50.0
+        gen_multiplier = 80.0
     elif model_gb > 1.0:
-        # Medium models (bart-large-cnn, rebel-large)
-        gen_multiplier = 20.0
+        # Medium-large models (Florence-2-large)
+        gen_multiplier = 40.0
     elif model_gb > 0.3:
-        # Small-medium models (bart-base, t5-base)
-        gen_multiplier = 10.0
+        # Medium models (bart-base, bart-large-cnn, rebel-large, whisper-small)
+        # CUDA graphs + generation KV cache + torch.compile reservations
+        gen_multiplier = 30.0
     else:
-        # Tiny models (t5-small, opus-mt, encoder-only)
-        gen_multiplier = 5.0
+        # Small models (t5-small, opus-mt, encoder-only)
+        gen_multiplier = 10.0
 
     effective_per_sample = per_sample_mem * gen_multiplier
 

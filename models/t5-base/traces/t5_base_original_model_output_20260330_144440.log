@@ -1,0 +1,172 @@
+Conda environment: original_env
+[14:44:42] start
+[14:44:42] loading tokenizer…
+[14:44:42] loading model
+[GPU] NVIDIA GeForce RTX 3090, 23.5 GB VRAM
+[GPU] Baseline memory (model loaded): 0.52 GB
+Asking to truncate to max_length but no maximum length is provided and the model has no predefined maximum length. Default to no truncation.
+Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.48.0. You should pass an instance of `EncoderDecoderCache` instead, e.g. `past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`.
+[GPU] Probe batch_size=8: peak=0.53 GB, per_sample=1.6 MB
+[GPU] Available for batches: 15.96 GB (target 70% utilization)
+[GPU] Estimated batch size: 1050
+[GPU] Verified: batch_size=1050 fits (peak 1.08 GB) ✅
+[14:44:44] using batch_size=1050
+[14:44:44] eager forward sanity check…
+[14:44:44] eager ok
+[14:44:44] checking Dynamo graph breaks…
+
+===== Graph Break Report =====
+Graph break count: 3
+Number of graphs:  4
+Break reasons:
+  1. GraphCompileReason(reason='Logger not supported for non-export cases. To avoid graph breaks caused by logger in compile-mode, it is recommended to disable logging by adding logging methods to config.ignore_logger_methods', user_stack=[<FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/transformers/models/t5/modeling_t5.py, line 1811 in forward>, <FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/transformers/models/t5/modeling_t5.py, line 1019 in forward>], graph_break=True)
+  2. GraphCompileReason(reason='Logger not supported for non-export cases. To avoid graph breaks caused by logger in compile-mode, it is recommended to disable logging by adding logging methods to config.ignore_logger_methods', user_stack=[<FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/transformers/models/t5/modeling_t5.py, line 1019 in forward>], graph_break=True)
+===================================
+[14:44:49] compiling with torch.compile (inductor, reduce-overhead)…
+[14:44:49] warmup x1…
+/home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/torch/_inductor/lowering.py:7007: UserWarning: 
+Online softmax is disabled on the fly since Inductor decides to
+split the reduction. Cut an issue to PyTorch if this is an
+important use case and you want to speed it up with online
+softmax.
+
+  warnings.warn(
+[14:45:09] profiling one step…
+[14:45:10] chrome trace saved: /home/savini98/repos/fx-graph-research/models/t5-base/traces/t5-base_trace_original_20260330_144509.json
+[14:45:11] ✅ CUDA Graph activity detected:
+  - cudaGraphDestroy
+  - cudaGraphGetNodes
+  - cudaGraphInstantiateWithFlags
+  - cudaGraphLaunch
+[14:45:11] benchmarking 30 timed runs…
+[14:45:11] run 1/30…
+[14:45:11] ⏱ Runtime: 0.303 s
+[14:45:11] 📝 Raw new tokens generated: 14
+[14:45:11] 🚀 Throughput: 46.18 tokens/s
+[14:45:11] run 2/30…
+[14:45:11] ⏱ Runtime: 0.275 s
+[14:45:11] 📝 Raw new tokens generated: 14
+[14:45:11] 🚀 Throughput: 50.87 tokens/s
+[14:45:11] run 3/30…
+[14:45:12] ⏱ Runtime: 0.284 s
+[14:45:12] 📝 Raw new tokens generated: 14
+[14:45:12] 🚀 Throughput: 49.31 tokens/s
+[14:45:12] run 4/30…
+[14:45:12] ⏱ Runtime: 0.274 s
+[14:45:12] 📝 Raw new tokens generated: 14
+[14:45:12] 🚀 Throughput: 51.07 tokens/s
+[14:45:12] run 5/30…
+[14:45:12] ⏱ Runtime: 0.273 s
+[14:45:12] 📝 Raw new tokens generated: 14
+[14:45:12] 🚀 Throughput: 51.22 tokens/s
+[14:45:12] run 6/30…
+[14:45:12] ⏱ Runtime: 0.274 s
+[14:45:12] 📝 Raw new tokens generated: 14
+[14:45:12] 🚀 Throughput: 51.19 tokens/s
+[14:45:12] run 7/30…
+[14:45:13] ⏱ Runtime: 0.272 s
+[14:45:13] 📝 Raw new tokens generated: 14
+[14:45:13] 🚀 Throughput: 51.54 tokens/s
+[14:45:13] run 8/30…
+[14:45:13] ⏱ Runtime: 0.274 s
+[14:45:13] 📝 Raw new tokens generated: 14
+[14:45:13] 🚀 Throughput: 51.09 tokens/s
+[14:45:13] run 9/30…
+[14:45:13] ⏱ Runtime: 0.274 s
+[14:45:13] 📝 Raw new tokens generated: 14
+[14:45:13] 🚀 Throughput: 51.05 tokens/s
+[14:45:13] run 10/30…
+[14:45:13] ⏱ Runtime: 0.272 s
+[14:45:13] 📝 Raw new tokens generated: 14
+[14:45:13] 🚀 Throughput: 51.46 tokens/s
+[14:45:13] run 11/30…
+[14:45:14] ⏱ Runtime: 0.271 s
+[14:45:14] 📝 Raw new tokens generated: 14
+[14:45:14] 🚀 Throughput: 51.75 tokens/s
+[14:45:14] run 12/30…
+[14:45:14] ⏱ Runtime: 0.274 s
+[14:45:14] 📝 Raw new tokens generated: 14
+[14:45:14] 🚀 Throughput: 51.12 tokens/s
+[14:45:14] run 13/30…
+[14:45:14] ⏱ Runtime: 0.273 s
+[14:45:14] 📝 Raw new tokens generated: 14
+[14:45:14] 🚀 Throughput: 51.22 tokens/s
+[14:45:14] run 14/30…
+[14:45:15] ⏱ Runtime: 0.274 s
+[14:45:15] 📝 Raw new tokens generated: 14
+[14:45:15] 🚀 Throughput: 51.15 tokens/s
+[14:45:15] run 15/30…
+[14:45:15] ⏱ Runtime: 0.273 s
+[14:45:15] 📝 Raw new tokens generated: 14
+[14:45:15] 🚀 Throughput: 51.26 tokens/s
+[14:45:15] run 16/30…
+[14:45:15] ⏱ Runtime: 0.273 s
+[14:45:15] 📝 Raw new tokens generated: 14
+[14:45:15] 🚀 Throughput: 51.26 tokens/s
+[14:45:15] run 17/30…
+[14:45:15] ⏱ Runtime: 0.273 s
+[14:45:15] 📝 Raw new tokens generated: 14
+[14:45:15] 🚀 Throughput: 51.31 tokens/s
+[14:45:15] run 18/30…
+[14:45:16] ⏱ Runtime: 0.273 s
+[14:45:16] 📝 Raw new tokens generated: 14
+[14:45:16] 🚀 Throughput: 51.30 tokens/s
+[14:45:16] run 19/30…
+[14:45:16] ⏱ Runtime: 0.273 s
+[14:45:16] 📝 Raw new tokens generated: 14
+[14:45:16] 🚀 Throughput: 51.26 tokens/s
+[14:45:16] run 20/30…
+[14:45:16] ⏱ Runtime: 0.276 s
+[14:45:16] 📝 Raw new tokens generated: 14
+[14:45:16] 🚀 Throughput: 50.78 tokens/s
+[14:45:16] run 21/30…
+[14:45:16] ⏱ Runtime: 0.274 s
+[14:45:16] 📝 Raw new tokens generated: 14
+[14:45:16] 🚀 Throughput: 51.07 tokens/s
+[14:45:16] run 22/30…
+[14:45:17] ⏱ Runtime: 0.273 s
+[14:45:17] 📝 Raw new tokens generated: 14
+[14:45:17] 🚀 Throughput: 51.26 tokens/s
+[14:45:17] run 23/30…
+[14:45:17] ⏱ Runtime: 0.273 s
+[14:45:17] 📝 Raw new tokens generated: 14
+[14:45:17] 🚀 Throughput: 51.25 tokens/s
+[14:45:17] run 24/30…
+[14:45:17] ⏱ Runtime: 0.276 s
+[14:45:17] 📝 Raw new tokens generated: 14
+[14:45:17] 🚀 Throughput: 50.68 tokens/s
+[14:45:17] run 25/30…
+[14:45:18] ⏱ Runtime: 0.273 s
+[14:45:18] 📝 Raw new tokens generated: 14
+[14:45:18] 🚀 Throughput: 51.22 tokens/s
+[14:45:18] run 26/30…
+[14:45:18] ⏱ Runtime: 0.273 s
+[14:45:18] 📝 Raw new tokens generated: 14
+[14:45:18] 🚀 Throughput: 51.23 tokens/s
+[14:45:18] run 27/30…
+[14:45:18] ⏱ Runtime: 0.273 s
+[14:45:18] 📝 Raw new tokens generated: 14
+[14:45:18] 🚀 Throughput: 51.25 tokens/s
+[14:45:18] run 28/30…
+[14:45:18] ⏱ Runtime: 0.274 s
+[14:45:18] 📝 Raw new tokens generated: 14
+[14:45:18] 🚀 Throughput: 51.02 tokens/s
+[14:45:18] run 29/30…
+[14:45:19] ⏱ Runtime: 0.276 s
+[14:45:19] 📝 Raw new tokens generated: 14
+[14:45:19] 🚀 Throughput: 50.76 tokens/s
+[14:45:19] run 30/30…
+[14:45:19] ⏱ Runtime: 0.288 s
+[14:45:19] 📝 Raw new tokens generated: 14
+[14:45:19] 🚀 Throughput: 48.55 tokens/s
+
+===== Benchmark summary =====
+Timed runs:       30
+Avg throughput:   50.86 tokens/s
+P50 throughput:   51.20 tokens/s
+P95 throughput:   51.46 tokens/s
+Std dev (tps):    1.06
+Avg runtime:      0.275 s
+Avg new tokens:   14.0
+/home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py
+[14:45:19] done

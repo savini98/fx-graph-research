@@ -197,8 +197,11 @@ def main():
         torch.cuda.synchronize()
     t("eager ok")
 
-    # Detect and report graph breaks before compiling
-    print_graph_breaks(model, batch)
+    # Detect and report graph breaks with a small batch (dynamo.explain needs extra memory)
+    small_batch = fixed_batch(processor, bs=min(BATCH_SIZE, 4))
+    print_graph_breaks(model, small_batch)
+    del small_batch
+    torch.cuda.empty_cache()
 
     compiled = compile_model(model)
     warmup(compiled, batch, iters=1)

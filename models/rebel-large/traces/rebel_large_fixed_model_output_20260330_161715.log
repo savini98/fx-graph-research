@@ -1,0 +1,73 @@
+Conda environment: fixed_env
+[16:17:17] start
+[16:17:17] loading tokenizer…
+[16:17:17] loading model
+[GPU] NVIDIA GeForce RTX 3090, 23.5 GB VRAM
+[GPU] Baseline memory (model loaded): 0.76 GB
+[GPU] Probe batch_size=8: peak=0.78 GB, per_sample=3.0 MB
+[GPU] Available for batches: 15.72 GB (target 70% utilization)
+[GPU] Estimated batch size: 542
+[GPU] Verified: batch_size=542 fits (peak 1.81 GB) ✅
+[16:17:19] using batch_size=542
+[16:17:19] eager forward sanity check…
+[16:17:19] eager ok
+[16:17:19] checking Dynamo graph breaks…
+
+===== Graph Break Report =====
+Graph break count: 0
+Number of graphs:  1
+No graph breaks detected.
+===================================
+[16:17:22] compiling with torch.compile (inductor, reduce-overhead)…
+[16:17:23] warmup x1…
+[16:17:39] profiling one step…
+[16:17:41] chrome trace saved: /home/savini98/repos/fx-graph-research/models/rebel-large/traces/rebel-large_trace_fixed_20260330_161739.json
+[16:17:41] ✅ CUDA Graph activity detected:
+  - cudaGraphDestroy
+  - cudaGraphGetNodes
+  - cudaGraphInstantiateWithFlags
+  - cudaGraphLaunch
+[16:17:41] benchmarking 30 timed runs…
+[16:17:41] run 1/30…
+[16:17:58] ⏱ Runtime: 17.037 s
+[16:17:58] 📝 Raw new tokens generated: 91
+[16:17:58] 🚀 Throughput: 5.34 tokens/s
+[16:17:58] run 2/30…
+[16:18:14] ⏱ Runtime: 16.298 s
+[16:18:14] 📝 Raw new tokens generated: 91
+[16:18:14] 🚀 Throughput: 5.58 tokens/s
+[16:18:14] run 3/30…
+[16:18:31] ⏱ Runtime: 16.576 s
+[16:18:31] 📝 Raw new tokens generated: 91
+[16:18:31] 🚀 Throughput: 5.49 tokens/s
+[16:18:31] run 4/30…
+[16:18:47] ⏱ Runtime: 16.459 s
+[16:18:47] 📝 Raw new tokens generated: 91
+[16:18:47] 🚀 Throughput: 5.53 tokens/s
+[16:18:47] run 5/30…
+[16:19:04] ⏱ Runtime: 16.475 s
+[16:19:04] 📝 Raw new tokens generated: 91
+[16:19:04] 🚀 Throughput: 5.52 tokens/s
+[16:19:04] run 6/30…
+Traceback (most recent call last):
+  File "/home/savini98/repos/fx-graph-research/models/rebel-large/rebel_large_script.py", line 284, in <module>
+    main()
+  File "/home/savini98/repos/fx-graph-research/models/rebel-large/rebel_large_script.py", line 246, in main
+    text, m = generate_text(
+              ^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/repos/fx-graph-research/models/rebel-large/rebel_large_script.py", line 163, in generate_text
+    out = model.generate(**gen_batch, **gen_kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/repos/fx-graph-research/transformers-modified/src/transformers/generation/utils.py", line 2616, in generate
+    result = self._beam_search(
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/repos/fx-graph-research/transformers-modified/src/transformers/generation/utils.py", line 4042, in _beam_search
+    logits = model_outputs.logits[:, -1, :].to(copy=True, dtype=torch.float32, device=input_ids.device)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 416.00 MiB. GPU 0 has a total capacity of 23.54 GiB of which 364.56 MiB is free. Including non-PyTorch memory, this process has 23.15 GiB memory in use. Of the allocated memory 14.12 GiB is allocated by PyTorch, with 1.16 GiB allocated in private pools (e.g., CUDA Graphs), and 8.70 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

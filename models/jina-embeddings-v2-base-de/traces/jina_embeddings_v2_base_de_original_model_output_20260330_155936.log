@@ -1,0 +1,161 @@
+Conda environment: original_env
+[15:59:38] start
+[15:59:38] loading tokenizer…
+[15:59:38] loading model
+[GPU] NVIDIA GeForce RTX 3090, 23.5 GB VRAM
+[GPU] Baseline memory (model loaded): 1.80 GB
+[GPU] Probe batch_size=8: peak=1.81 GB, per_sample=1.5 MB
+[GPU] Available for batches: 14.68 GB (target 70% utilization)
+[GPU] Estimated batch size: 514
+[GPU] Verified: batch_size=514 fits (peak 1.98 GB) ✅
+[15:59:41] using batch_size=514
+[15:59:41] eager forward sanity check…
+[15:59:41] eager ok
+[15:59:41] checking Dynamo graph breaks…
+
+===== Graph Break Report =====
+Graph break count: 0
+Number of graphs:  1
+No graph breaks detected.
+===================================
+[15:59:43] compiling with torch.compile (inductor, reduce-overhead)…
+[15:59:43] warmup x1…
+[15:59:52] profiling one step…
+[15:59:53] chrome trace saved: /home/savini98/repos/fx-graph-research/models/jina-embeddings-v2-base-de/traces/jina-embeddings-v2-base-de_trace_original_20260330_155952.json
+[15:59:53] ✅ CUDA Graph activity detected:
+  - cudaGraphDestroy
+  - cudaGraphGetNodes
+  - cudaGraphInstantiateWithFlags
+  - cudaGraphLaunch
+[15:59:53] benchmarking 30 timed runs…
+[15:59:53] run 1/30…
+[15:59:53] ⏱ Runtime: 0.027 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 19025.82 sequences/s
+[15:59:53] run 2/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18286.22 sequences/s
+[15:59:53] run 3/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18302.52 sequences/s
+[15:59:53] run 4/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18322.74 sequences/s
+[15:59:53] run 5/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18289.01 sequences/s
+[15:59:53] run 6/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18328.82 sequences/s
+[15:59:53] run 7/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18268.25 sequences/s
+[15:59:53] run 8/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18181.66 sequences/s
+[15:59:53] run 9/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18213.00 sequences/s
+[15:59:53] run 10/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18348.79 sequences/s
+[15:59:53] run 11/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18451.18 sequences/s
+[15:59:53] run 12/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18440.29 sequences/s
+[15:59:53] run 13/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18455.44 sequences/s
+[15:59:53] run 14/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18392.77 sequences/s
+[15:59:53] run 15/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18407.22 sequences/s
+[15:59:53] run 16/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18402.82 sequences/s
+[15:59:53] run 17/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18316.36 sequences/s
+[15:59:53] run 18/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18373.49 sequences/s
+[15:59:53] run 19/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18420.28 sequences/s
+[15:59:53] run 20/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18285.13 sequences/s
+[15:59:53] run 21/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18348.47 sequences/s
+[15:59:53] run 22/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18155.63 sequences/s
+[15:59:53] run 23/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18271.34 sequences/s
+[15:59:53] run 24/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18337.55 sequences/s
+[15:59:53] run 25/30…
+[15:59:53] ⏱ Runtime: 0.028 s
+[15:59:53] 📝 Sequences in batch: 514
+[15:59:53] 🚀 Throughput: 18322.43 sequences/s
+[15:59:53] run 26/30…
+[15:59:54] ⏱ Runtime: 0.028 s
+[15:59:54] 📝 Sequences in batch: 514
+[15:59:54] 🚀 Throughput: 18357.54 sequences/s
+[15:59:54] run 27/30…
+[15:59:54] ⏱ Runtime: 0.028 s
+[15:59:54] 📝 Sequences in batch: 514
+[15:59:54] 🚀 Throughput: 18265.00 sequences/s
+[15:59:54] run 28/30…
+[15:59:54] ⏱ Runtime: 0.028 s
+[15:59:54] 📝 Sequences in batch: 514
+[15:59:54] 🚀 Throughput: 18384.46 sequences/s
+[15:59:54] run 29/30…
+[15:59:54] ⏱ Runtime: 0.028 s
+[15:59:54] 📝 Sequences in batch: 514
+[15:59:54] 🚀 Throughput: 18319.63 sequences/s
+[15:59:54] run 30/30…
+[15:59:54] ⏱ Runtime: 0.028 s
+[15:59:54] 📝 Sequences in batch: 514
+[15:59:54] 🚀 Throughput: 18432.40 sequences/s
+
+===== Benchmark summary =====
+Timed runs:          30
+Batch size:          514
+Avg throughput:      18356.88 sequences/s
+P50 throughput:      18333.18 sequences/s
+P95 throughput:      18451.18 sequences/s
+Std dev (seqs/s):    144.87
+Avg runtime:         0.028 s
+/home/savini98/.cache/huggingface/modules/transformers_modules/jina-embeddings-v2-base-de/modeling_bert.py
+[15:59:54] done

@@ -1,0 +1,62 @@
+Conda environment: fixed_env
+[16:10:13] start
+[16:10:15] loading chronos-bolt-small pipeline…
+[16:10:15] eager predict sanity check…
+Traceback (most recent call last):
+  File "/home/savini98/repos/fx-graph-research/models/chronos-bolt-small/chronos_bolt_small_script.py", line 257, in <module>
+    main()
+  File "/home/savini98/repos/fx-graph-research/models/chronos-bolt-small/chronos_bolt_small_script.py", line 202, in main
+    forecast = pipeline.predict(inputs=context, prediction_length=PREDICTION_LENGTH)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/chronos/chronos_bolt.py", line 522, in predict
+    prediction: torch.Tensor = self.model(context=context_tensor).quantile_preds.to(context_tensor)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/chronos/chronos_bolt.py", line 303, in forward
+    hidden_states, loc_scale, input_embeds, attention_mask = self.encode(context=context, mask=mask)
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/chronos/chronos_bolt.py", line 287, in encode
+    encoder_outputs = self.encoder(
+                      ^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/repos/fx-graph-research/transformers-modified/src/transformers/models/t5/modeling_t5.py", line 1124, in forward
+    layer_outputs = layer_module(
+                    ^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/repos/fx-graph-research/transformers-modified/src/transformers/models/t5/modeling_t5.py", line 679, in forward
+    self_attention_outputs = self.layer[0](
+                             ^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/repos/fx-graph-research/transformers-modified/src/transformers/models/t5/modeling_t5.py", line 597, in forward
+    attention_output = self.SelfAttention(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/savini98/repos/fx-graph-research/transformers-modified/src/transformers/models/t5/modeling_t5.py", line 492, in forward
+    query_states = query_states.view(batch_size, -1, self.n_heads, self.key_value_proj_dim).transpose(1, 2)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: cannot reshape tensor of 0 elements into shape [0, -1, 8, 64] because the unspecified dimension size -1 can be any value and is ambiguous

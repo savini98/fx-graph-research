@@ -1,0 +1,150 @@
+Conda environment: fixed_env
+[16:20:04] start
+[16:20:06] loading chronos-bolt-small pipeline…
+[16:20:07] eager predict sanity check…
+[16:20:07] eager ok — forecast shape: torch.Size([64, 9, 24])
+[16:20:07] checking Dynamo graph breaks…
+[16:20:07] inner model class: ChronosBoltModelForForecasting
+
+===== Graph Break Report =====
+Graph break count: 0
+Number of graphs:  1
+No graph breaks detected.
+===================================
+[16:20:09] warmup x1…
+[16:20:09] profiling one step…
+[16:20:09] chrome trace saved: /home/savini98/repos/fx-graph-research/models/chronos-bolt-small/traces/chronos-bolt-small_trace_fixed_20260330_162009.json
+[16:20:11] ❌ No CUDA Graph API events detected in this step.
+[16:20:11] benchmarking 30 timed runs…
+[16:20:11] run 1/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5212.95 series/s
+[16:20:11] run 2/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5192.88 series/s
+[16:20:11] run 3/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5434.14 series/s
+[16:20:11] run 4/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5436.67 series/s
+[16:20:11] run 5/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5454.56 series/s
+[16:20:11] run 6/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5488.24 series/s
+[16:20:11] run 7/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5429.96 series/s
+[16:20:11] run 8/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5487.68 series/s
+[16:20:11] run 9/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5311.45 series/s
+[16:20:11] run 10/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5488.92 series/s
+[16:20:11] run 11/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5419.65 series/s
+[16:20:11] run 12/30…
+[16:20:11] ⏱ Runtime: 0.014 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 4689.73 series/s
+[16:20:11] run 13/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5234.39 series/s
+[16:20:11] run 14/30…
+[16:20:11] ⏱ Runtime: 0.013 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 4848.38 series/s
+[16:20:11] run 15/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5231.74 series/s
+[16:20:11] run 16/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5280.21 series/s
+[16:20:11] run 17/30…
+[16:20:11] ⏱ Runtime: 0.013 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 4927.77 series/s
+[16:20:11] run 18/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5397.75 series/s
+[16:20:11] run 19/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5370.54 series/s
+[16:20:11] run 20/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5485.66 series/s
+[16:20:11] run 21/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5314.92 series/s
+[16:20:11] run 22/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5291.25 series/s
+[16:20:11] run 23/30…
+[16:20:11] ⏱ Runtime: 0.013 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 4986.45 series/s
+[16:20:11] run 24/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5231.23 series/s
+[16:20:11] run 25/30…
+[16:20:11] ⏱ Runtime: 0.017 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 3793.66 series/s
+[16:20:11] run 26/30…
+[16:20:11] ⏱ Runtime: 0.015 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 4161.53 series/s
+[16:20:11] run 27/30…
+[16:20:11] ⏱ Runtime: 0.014 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 4420.07 series/s
+[16:20:11] run 28/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5294.90 series/s
+[16:20:11] run 29/30…
+[16:20:11] ⏱ Runtime: 0.013 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5103.04 series/s
+[16:20:11] run 30/30…
+[16:20:11] ⏱ Runtime: 0.012 s
+[16:20:11] 📝 Series in batch: 64
+[16:20:11] 🚀 Throughput: 5483.09 series/s
+
+===== Benchmark summary =====
+Timed runs:          30
+Batch size:          64
+Prediction length:   24
+Avg throughput:      5163.45 series/s
+P50 throughput:      5293.07 series/s
+P95 throughput:      5487.68 series/s
+Std dev (series/s):  406.05
+Avg runtime:         0.012 s
+/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/chronos/chronos_bolt.py
+[16:20:11] done

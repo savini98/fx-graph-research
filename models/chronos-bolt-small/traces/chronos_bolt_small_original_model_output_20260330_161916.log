@@ -1,0 +1,155 @@
+Conda environment: original_env
+[16:19:17] start
+[16:19:19] loading chronos-bolt-small pipeline…
+[16:19:20] eager predict sanity check…
+Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.48.0. You should pass an instance of `EncoderDecoderCache` instead, e.g. `past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`.
+[16:19:20] eager ok — forecast shape: torch.Size([64, 9, 24])
+[16:19:20] checking Dynamo graph breaks…
+[16:19:20] inner model class: ChronosBoltModelForForecasting
+
+===== Graph Break Report =====
+Graph break count: 6
+Number of graphs:  7
+Break reasons:
+  1. GraphCompileReason(reason='Logger not supported for non-export cases. To avoid graph breaks caused by logger in compile-mode, it is recommended to disable logging by adding logging methods to config.ignore_logger_methods', user_stack=[<FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/chronos/chronos_bolt.py, line 522 in predict>, <FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/chronos/chronos_bolt.py, line 304 in forward>, <FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/chronos/chronos_bolt.py, line 392 in decode>, <FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/transformers/models/t5/modeling_t5.py, line 1019 in forward>], graph_break=True)
+  2. GraphCompileReason(reason='Logger not supported for non-export cases. To avoid graph breaks caused by logger in compile-mode, it is recommended to disable logging by adding logging methods to config.ignore_logger_methods', user_stack=[<FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/chronos/chronos_bolt.py, line 304 in forward>, <FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/chronos/chronos_bolt.py, line 392 in decode>, <FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/transformers/models/t5/modeling_t5.py, line 1019 in forward>], graph_break=True)
+  3. GraphCompileReason(reason='Logger not supported for non-export cases. To avoid graph breaks caused by logger in compile-mode, it is recommended to disable logging by adding logging methods to config.ignore_logger_methods', user_stack=[<FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/chronos/chronos_bolt.py, line 392 in decode>, <FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/transformers/models/t5/modeling_t5.py, line 1019 in forward>], graph_break=True)
+  4. GraphCompileReason(reason='Logger not supported for non-export cases. To avoid graph breaks caused by logger in compile-mode, it is recommended to disable logging by adding logging methods to config.ignore_logger_methods', user_stack=[<FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/transformers/models/t5/modeling_t5.py, line 1019 in forward>], graph_break=True)
+===================================
+[16:19:23] warmup x1…
+[16:19:23] profiling one step…
+[16:19:24] chrome trace saved: /home/savini98/repos/fx-graph-research/models/chronos-bolt-small/traces/chronos-bolt-small_trace_original_20260330_161923.json
+[16:19:25] ❌ No CUDA Graph API events detected in this step.
+[16:19:25] benchmarking 30 timed runs…
+[16:19:25] run 1/30…
+[16:19:25] ⏱ Runtime: 0.013 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 4825.20 series/s
+[16:19:25] run 2/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5218.82 series/s
+[16:19:25] run 3/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5206.07 series/s
+[16:19:25] run 4/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5126.63 series/s
+[16:19:25] run 5/30…
+[16:19:25] ⏱ Runtime: 0.013 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5058.04 series/s
+[16:19:25] run 6/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5253.96 series/s
+[16:19:25] run 7/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5219.64 series/s
+[16:19:25] run 8/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5212.64 series/s
+[16:19:25] run 9/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5228.18 series/s
+[16:19:25] run 10/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5227.56 series/s
+[16:19:25] run 11/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5221.06 series/s
+[16:19:25] run 12/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5201.23 series/s
+[16:19:25] run 13/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5209.00 series/s
+[16:19:25] run 14/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5235.01 series/s
+[16:19:25] run 15/30…
+[16:19:25] ⏱ Runtime: 0.013 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5005.79 series/s
+[16:19:25] run 16/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5136.54 series/s
+[16:19:25] run 17/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5183.95 series/s
+[16:19:25] run 18/30…
+[16:19:25] ⏱ Runtime: 0.013 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5109.26 series/s
+[16:19:25] run 19/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5204.86 series/s
+[16:19:25] run 20/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5135.65 series/s
+[16:19:25] run 21/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5132.71 series/s
+[16:19:25] run 22/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5152.51 series/s
+[16:19:25] run 23/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5216.69 series/s
+[16:19:25] run 24/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5214.16 series/s
+[16:19:25] run 25/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5230.01 series/s
+[16:19:25] run 26/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5184.15 series/s
+[16:19:25] run 27/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5189.77 series/s
+[16:19:25] run 28/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5189.06 series/s
+[16:19:25] run 29/30…
+[16:19:25] ⏱ Runtime: 0.012 s
+[16:19:25] 📝 Series in batch: 64
+[16:19:25] 🚀 Throughput: 5196.09 series/s
+[16:19:25] run 30/30…
+[16:19:26] ⏱ Runtime: 0.012 s
+[16:19:26] 📝 Series in batch: 64
+[16:19:26] 🚀 Throughput: 5181.05 series/s
+
+===== Benchmark summary =====
+Timed runs:          30
+Batch size:          64
+Prediction length:   24
+Avg throughput:      5170.18 series/s
+P50 throughput:      5198.66 series/s
+P95 throughput:      5230.01 series/s
+Std dev (series/s):  83.65
+Avg runtime:         0.012 s
+/home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/chronos/chronos_bolt.py
+[16:19:26] done

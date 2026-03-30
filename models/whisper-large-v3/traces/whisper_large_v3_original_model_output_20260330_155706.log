@@ -1,0 +1,166 @@
+Conda environment: original_env
+[15:57:09] start
+[15:57:09] loading processor…
+[15:57:09] loading model
+[GPU] NVIDIA GeForce RTX 3090, 23.5 GB VRAM
+[GPU] Baseline memory (model loaded): 2.87 GB
+Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.43.0. You should pass an instance of `EncoderDecoderCache` instead, e.g. `past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`.
+[GPU] Probe batch_size=8: peak=4.81 GB, per_sample=248.3 MB
+[GPU] Available for batches: 13.60 GB (target 70% utilization)
+[GPU] Estimated batch size: 2
+[GPU] Verified: batch_size=2 fits (peak 4.81 GB) ✅
+[15:57:11] using batch_size=2
+[15:57:11] eager forward sanity check…
+[15:57:11] eager ok
+[15:57:11] checking Dynamo graph breaks…
+
+===== Graph Break Report =====
+Graph break count: 3
+Number of graphs:  4
+Break reasons:
+  1. GraphCompileReason(reason='Logger not supported for non-export cases. To avoid graph breaks caused by logger in compile-mode, it is recommended to disable logging by adding logging methods to config.ignore_logger_methods', user_stack=[<FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/transformers/models/whisper/modeling_whisper.py, line 1529 in forward>, <FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/transformers/models/whisper/modeling_whisper.py, line 1104 in forward>], graph_break=True)
+  2. GraphCompileReason(reason='Logger not supported for non-export cases. To avoid graph breaks caused by logger in compile-mode, it is recommended to disable logging by adding logging methods to config.ignore_logger_methods', user_stack=[<FrameSummary file /home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/transformers/models/whisper/modeling_whisper.py, line 1104 in forward>], graph_break=True)
+===================================
+[15:57:21] compiling with torch.compile (inductor, reduce-overhead)…
+[15:57:21] warmup x1…
+[15:57:32] profiling one step…
+[15:57:34] chrome trace saved: /home/savini98/repos/fx-graph-research/models/whisper-large-v3/traces/whisper-large-v3_trace_original_20260330_155732.json
+[15:57:35] ✅ CUDA Graph activity detected:
+  - cudaGraphDestroy
+  - cudaGraphGetNodes
+  - cudaGraphInstantiateWithFlags
+  - cudaGraphLaunch
+[15:57:35] benchmarking 30 timed runs…
+[15:57:35] run 1/30…
+Due to a bug fix in https://github.com/huggingface/transformers/pull/28687 transcription using a multilingual Whisper will default to language detection followed by transcription instead of translation to English.This might be a breaking change for your use case. If you want to instead always translate your audio to English, make sure to pass `language='en'`.
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+[15:57:35] ⏱ Runtime: 0.442 s
+[15:57:35] 📝 Raw new tokens generated: 6
+[15:57:35] 🚀 Throughput: 13.58 tokens/s
+[15:57:35] run 2/30…
+[15:57:35] ⏱ Runtime: 0.368 s
+[15:57:35] 📝 Raw new tokens generated: 6
+[15:57:35] 🚀 Throughput: 16.32 tokens/s
+[15:57:35] run 3/30…
+[15:57:36] ⏱ Runtime: 0.366 s
+[15:57:36] 📝 Raw new tokens generated: 6
+[15:57:36] 🚀 Throughput: 16.40 tokens/s
+[15:57:36] run 4/30…
+[15:57:36] ⏱ Runtime: 0.367 s
+[15:57:36] 📝 Raw new tokens generated: 6
+[15:57:36] 🚀 Throughput: 16.33 tokens/s
+[15:57:36] run 5/30…
+[15:57:37] ⏱ Runtime: 0.368 s
+[15:57:37] 📝 Raw new tokens generated: 6
+[15:57:37] 🚀 Throughput: 16.31 tokens/s
+[15:57:37] run 6/30…
+[15:57:37] ⏱ Runtime: 0.367 s
+[15:57:37] 📝 Raw new tokens generated: 6
+[15:57:37] 🚀 Throughput: 16.34 tokens/s
+[15:57:37] run 7/30…
+[15:57:37] ⏱ Runtime: 0.368 s
+[15:57:37] 📝 Raw new tokens generated: 6
+[15:57:37] 🚀 Throughput: 16.29 tokens/s
+[15:57:37] run 8/30…
+[15:57:38] ⏱ Runtime: 0.368 s
+[15:57:38] 📝 Raw new tokens generated: 6
+[15:57:38] 🚀 Throughput: 16.30 tokens/s
+[15:57:38] run 9/30…
+[15:57:38] ⏱ Runtime: 0.369 s
+[15:57:38] 📝 Raw new tokens generated: 6
+[15:57:38] 🚀 Throughput: 16.27 tokens/s
+[15:57:38] run 10/30…
+[15:57:38] ⏱ Runtime: 0.386 s
+[15:57:38] 📝 Raw new tokens generated: 6
+[15:57:38] 🚀 Throughput: 15.53 tokens/s
+[15:57:38] run 11/30…
+[15:57:39] ⏱ Runtime: 0.380 s
+[15:57:39] 📝 Raw new tokens generated: 6
+[15:57:39] 🚀 Throughput: 15.78 tokens/s
+[15:57:39] run 12/30…
+[15:57:39] ⏱ Runtime: 0.368 s
+[15:57:39] 📝 Raw new tokens generated: 6
+[15:57:39] 🚀 Throughput: 16.28 tokens/s
+[15:57:39] run 13/30…
+[15:57:40] ⏱ Runtime: 0.370 s
+[15:57:40] 📝 Raw new tokens generated: 6
+[15:57:40] 🚀 Throughput: 16.20 tokens/s
+[15:57:40] run 14/30…
+[15:57:40] ⏱ Runtime: 0.369 s
+[15:57:40] 📝 Raw new tokens generated: 6
+[15:57:40] 🚀 Throughput: 16.24 tokens/s
+[15:57:40] run 15/30…
+[15:57:40] ⏱ Runtime: 0.369 s
+[15:57:40] 📝 Raw new tokens generated: 6
+[15:57:40] 🚀 Throughput: 16.27 tokens/s
+[15:57:40] run 16/30…
+[15:57:41] ⏱ Runtime: 0.370 s
+[15:57:41] 📝 Raw new tokens generated: 6
+[15:57:41] 🚀 Throughput: 16.23 tokens/s
+[15:57:41] run 17/30…
+[15:57:41] ⏱ Runtime: 0.368 s
+[15:57:41] 📝 Raw new tokens generated: 6
+[15:57:41] 🚀 Throughput: 16.29 tokens/s
+[15:57:41] run 18/30…
+[15:57:41] ⏱ Runtime: 0.369 s
+[15:57:41] 📝 Raw new tokens generated: 6
+[15:57:41] 🚀 Throughput: 16.27 tokens/s
+[15:57:41] run 19/30…
+[15:57:42] ⏱ Runtime: 0.368 s
+[15:57:42] 📝 Raw new tokens generated: 6
+[15:57:42] 🚀 Throughput: 16.30 tokens/s
+[15:57:42] run 20/30…
+[15:57:42] ⏱ Runtime: 0.368 s
+[15:57:42] 📝 Raw new tokens generated: 6
+[15:57:42] 🚀 Throughput: 16.30 tokens/s
+[15:57:42] run 21/30…
+[15:57:43] ⏱ Runtime: 0.369 s
+[15:57:43] 📝 Raw new tokens generated: 6
+[15:57:43] 🚀 Throughput: 16.25 tokens/s
+[15:57:43] run 22/30…
+[15:57:43] ⏱ Runtime: 0.369 s
+[15:57:43] 📝 Raw new tokens generated: 6
+[15:57:43] 🚀 Throughput: 16.26 tokens/s
+[15:57:43] run 23/30…
+[15:57:43] ⏱ Runtime: 0.368 s
+[15:57:43] 📝 Raw new tokens generated: 6
+[15:57:43] 🚀 Throughput: 16.30 tokens/s
+[15:57:43] run 24/30…
+[15:57:44] ⏱ Runtime: 0.368 s
+[15:57:44] 📝 Raw new tokens generated: 6
+[15:57:44] 🚀 Throughput: 16.30 tokens/s
+[15:57:44] run 25/30…
+[15:57:44] ⏱ Runtime: 0.369 s
+[15:57:44] 📝 Raw new tokens generated: 6
+[15:57:44] 🚀 Throughput: 16.24 tokens/s
+[15:57:44] run 26/30…
+[15:57:44] ⏱ Runtime: 0.370 s
+[15:57:44] 📝 Raw new tokens generated: 6
+[15:57:44] 🚀 Throughput: 16.20 tokens/s
+[15:57:44] run 27/30…
+[15:57:45] ⏱ Runtime: 0.370 s
+[15:57:45] 📝 Raw new tokens generated: 6
+[15:57:45] 🚀 Throughput: 16.20 tokens/s
+[15:57:45] run 28/30…
+[15:57:45] ⏱ Runtime: 0.368 s
+[15:57:45] 📝 Raw new tokens generated: 6
+[15:57:45] 🚀 Throughput: 16.30 tokens/s
+[15:57:45] run 29/30…
+[15:57:46] ⏱ Runtime: 0.371 s
+[15:57:46] 📝 Raw new tokens generated: 6
+[15:57:46] 🚀 Throughput: 16.18 tokens/s
+[15:57:46] run 30/30…
+[15:57:46] ⏱ Runtime: 0.371 s
+[15:57:46] 📝 Raw new tokens generated: 6
+[15:57:46] 🚀 Throughput: 16.19 tokens/s
+
+===== Benchmark summary =====
+Timed runs:       30
+Avg throughput:   16.14 tokens/s
+P50 throughput:   16.27 tokens/s
+P95 throughput:   16.33 tokens/s
+Std dev (tps):    0.50
+Avg runtime:      0.372 s
+Avg new tokens:   6.0
+/home/savini98/miniconda3/envs/original_env/lib/python3.12/site-packages/transformers/models/whisper/modeling_whisper.py
+[15:57:46] done
