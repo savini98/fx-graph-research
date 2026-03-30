@@ -181,10 +181,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--type', type=str, default='original', help='Type label for trace file (default: original)')
     parser.add_argument('--runs', type=int, default=30, help='Number of timed runs to perform (default: 30)')
-    parser.add_argument('--batch_size', type=int, default=64, help='Batch size (default: 64)')
+    parser.add_argument('--batch_size', type=int, default=64, help='Batch size (default: 64, 0 not supported for chronos)')
     args = parser.parse_args()
     global BATCH_SIZE
-    BATCH_SIZE = args.batch_size
+    # Chronos uses a custom pipeline, not standard model(**batch),
+    # so auto-detect (batch_size=0) is not supported. Use default.
+    BATCH_SIZE = args.batch_size if args.batch_size > 0 else 64
     global TYPE
     TYPE = args.type
     global MODEL_ID

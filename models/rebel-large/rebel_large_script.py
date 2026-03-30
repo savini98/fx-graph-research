@@ -14,7 +14,7 @@ import argparse
 
 TYPE = "original"  # Set your desired type label here
 BATCH_SIZE = 150  # Set your desired batch size here
-MODEL_ID = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rebel-large")
+MODEL_ID = "Babelscape/rebel-large"
 OUTPUT_TOKEN_LENGTH = 100  # Set your desired output token length limit here
 PROMPT = "Punta Cana is a resort town in the municipality of Higüey, in La Altagracia Province, the eastern most province of the Dominican Republic."
 
