@@ -16,7 +16,7 @@ echo "Running blenderbot-400M-distill original model..."
 python blenderbot-400M-distill_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 400 > traces/blenderbot_400M_distill_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/blenderbot_400M_distill_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running blenderbot-400M-distill original model."
 
@@ -32,4 +32,4 @@ echo "Running blenderbot-400M-distill fixed model..."
 python blenderbot-400M-distill_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 400 > traces/blenderbot_400M_distill_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/blenderbot_400M_distill_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log

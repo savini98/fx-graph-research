@@ -249,10 +249,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--type', type=str, default='original', help='Type label for trace file (default: original)')
     parser.add_argument('--runs', type=int, default=30, help='Number of timed runs to perform (default: 30)')
-    parser.add_argument('--batch_size', type=int, default=256, help='Batch size (default: 256)')
+    parser.add_argument('--batch_size', type=int, default=0, help='Batch size (default: 0 = auto-detect)')
     args = parser.parse_args()
     global BATCH_SIZE
-    BATCH_SIZE = args.batch_size
     global TYPE
     TYPE = args.type
     global MODEL_ID
@@ -262,6 +261,17 @@ def main():
     t("start")
     os.makedirs(TRACES_DIR, exist_ok=True)
     model, tok = load_model(local_only=True)
+    if args.batch_size <= 0:
+        import sys
+        sys.path.insert(0, os.path.join(SCRIPT_DIR, ".."))
+        from gpu_utils import find_max_batch_size
+        BATCH_SIZE = find_max_batch_size(
+            make_batch_fn=lambda bs: make_batch(tok, bs=bs, include_attention_mask=(TYPE == "original")),
+            model_fn=lambda **b: model(**b),
+        )
+    else:
+        BATCH_SIZE = args.batch_size
+    t(f"using batch_size={BATCH_SIZE}")
     # Original run: include attention_mask to reproduce the torch.equal() graph breaks.
     # Fixed run: omit attention_mask (the patched model eliminates the graph-break branch).
     batch = make_batch(tok, bs=BATCH_SIZE, include_attention_mask=(TYPE == "original"))

@@ -15,7 +15,7 @@ echo "Running longformer scico original model..."
 python longformer-scico_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 300 > traces/longformer_scico_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/longformer_scico_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running longformer scico original model."
 
@@ -31,4 +31,4 @@ echo "Running longformer scico fixed model..."
 python longformer-scico_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 300 > traces/longformer_scico_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/longformer_scico_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log

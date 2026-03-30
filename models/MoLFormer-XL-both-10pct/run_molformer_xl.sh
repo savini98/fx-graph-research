@@ -17,7 +17,7 @@ echo "Running MoLFormer-XL-both-10pct original model..."
 python molformer_xl_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 256 2>&1 | tee traces/molformer_xl_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/molformer_xl_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running MoLFormer-XL-both-10pct original model."
 
@@ -33,4 +33,4 @@ echo "Running MoLFormer-XL-both-10pct fixed model..."
 python molformer_xl_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 256 2>&1 | tee traces/molformer_xl_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/molformer_xl_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log

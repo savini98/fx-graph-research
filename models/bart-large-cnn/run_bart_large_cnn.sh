@@ -23,7 +23,7 @@ echo "Running bart-large-cnn original model..."
 python bart_large_cnn_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 100 2>&1 | tee traces/bart_large_cnn_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/bart_large_cnn_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running bart-large-cnn original model."
 
@@ -39,7 +39,7 @@ echo "Running bart-large-cnn fixed model..."
 python bart_large_cnn_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 100 2>&1 | tee traces/bart_large_cnn_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/bart_large_cnn_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 # Clean up cloned model files to free disk space
 if [ -d "bart-large-cnn" ]; then

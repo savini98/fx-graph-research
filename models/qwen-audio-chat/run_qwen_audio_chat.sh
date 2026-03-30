@@ -16,7 +16,7 @@ echo "Running Qwen-Audio-Chat original model..."
 python qwen_audio_chat_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 100 > traces/qwen_audio_chat_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/qwen_audio_chat_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running qwen_audio_chat original model."
 
@@ -34,7 +34,7 @@ echo "Running Qwen-Audio-Chat fixed model..."
 python qwen_audio_chat_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 100 > traces/qwen_audio_chat_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/qwen_audio_chat_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 
 # Restore the original modeling_qwen.py file

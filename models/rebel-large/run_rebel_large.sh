@@ -24,7 +24,7 @@ echo "Running rebel-large original model..."
 python rebel_large_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 150 2>&1 | tee traces/rebel_large_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/rebel_large_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running rebel-large original model."
 
@@ -40,7 +40,7 @@ echo "Running rebel-large fixed model..."
 python rebel_large_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 150 2>&1 | tee traces/rebel_large_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/rebel_large_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 # Clean up cloned model files to free disk space
 if [ -d "rebel-large" ]; then

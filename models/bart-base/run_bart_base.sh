@@ -24,7 +24,7 @@ echo "Running bart-base original model..."
 python bart_base_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 200 2>&1 | tee traces/bart_base_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/bart_base_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running bart-base original model."
 
@@ -40,7 +40,7 @@ echo "Running bart-base fixed model..."
 python bart_base_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 200 2>&1 | tee traces/bart_base_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/bart_base_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 # Clean up cloned model files to free disk space
 if [ -d "bart-base" ]; then

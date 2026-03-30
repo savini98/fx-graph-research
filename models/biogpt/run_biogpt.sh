@@ -15,7 +15,7 @@ echo "Running biogpt original model..."
 python biogpt_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 300 > traces/biogpt_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/biogpt_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running biogpt original model."
 
@@ -31,4 +31,4 @@ echo "Running biogpt fixed model..."
 python biogpt_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 450 > traces/biogpt_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/biogpt_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log

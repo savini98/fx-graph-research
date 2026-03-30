@@ -185,10 +185,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--type', type=str, default='original', help='Type label for trace file (default: original)')
     parser.add_argument('--runs', type=int, default=30, help='Number of timed runs to perform (default: 30)')
-    parser.add_argument('--batch_size', type=int, default=50, help='Batch size for generation (default: 50)')
+    parser.add_argument('--batch_size', type=int, default=0, help='Batch size for generation (default: 0 = auto-detect)')
     args = parser.parse_args()
     global BATCH_SIZE
-    BATCH_SIZE = args.batch_size
     global TYPE
     TYPE = args.type
     global MODEL_ID
@@ -198,6 +197,17 @@ def main():
     t("start")
     os.makedirs(TRACES_DIR, exist_ok=True)
     model, tok = load_model(local_only=True)
+    if args.batch_size <= 0:
+        import sys
+        sys.path.insert(0, os.path.join(SCRIPT_DIR, ".."))
+        from gpu_utils import find_max_batch_size
+        BATCH_SIZE = find_max_batch_size(
+            make_batch_fn=lambda bs: fixed_batch(tok, bs=bs, seq_len=5),
+            model_fn=lambda **b: model(**b),
+        )
+    else:
+        BATCH_SIZE = args.batch_size
+    t(f"using batch_size={BATCH_SIZE}")
     batch = fixed_batch(tok, bs=BATCH_SIZE, seq_len=5)
 
     # Quick eager sanity check (no compile) — catches download/shape issues immediately

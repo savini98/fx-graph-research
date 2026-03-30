@@ -23,7 +23,7 @@ echo "Running t5-base original model..."
 python t5_base_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 300 2>&1 | tee traces/t5_base_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/t5_base_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running t5-base original model."
 
@@ -39,7 +39,7 @@ echo "Running t5-base fixed model..."
 python t5_base_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 300 2>&1 | tee traces/t5_base_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/t5_base_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 # Clean up cloned model files to free disk space
 if [ -d "t5-base" ]; then

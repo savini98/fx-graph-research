@@ -16,7 +16,7 @@ echo "Running flan-t5-large original model..."
 python flan-t5-large_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 300 > traces/flan-t5-large_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/flan-t5-large_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running flan-t5-large original model."
 
@@ -32,4 +32,4 @@ echo "Running flan-t5-large fixed model..."
 python flan-t5-large_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 300 > traces/flan-t5-large_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/flan-t5-large_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log

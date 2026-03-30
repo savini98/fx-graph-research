@@ -20,7 +20,7 @@ echo "Running chronos-bolt-small original model..."
 python chronos_bolt_small_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 64 2>&1 | tee traces/chronos_bolt_small_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/chronos_bolt_small_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running chronos-bolt-small original model."
 
@@ -39,4 +39,4 @@ echo "Running chronos-bolt-small fixed model..."
 python chronos_bolt_small_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 64 2>&1 | tee traces/chronos_bolt_small_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/chronos_bolt_small_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log

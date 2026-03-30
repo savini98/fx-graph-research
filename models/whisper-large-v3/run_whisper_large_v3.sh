@@ -23,7 +23,7 @@ echo "Running whisper-large-v3 original model..."
 python whisper_large_v3_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 2 2>&1 | tee traces/whisper_large_v3_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/whisper_large_v3_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running whisper-large-v3 original model."
 
@@ -39,7 +39,7 @@ echo "Running whisper-large-v3 fixed model..."
 python whisper_large_v3_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 2 2>&1 | tee traces/whisper_large_v3_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/whisper_large_v3_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 # Clean up cloned model files to free disk space
 if [ -d "whisper-large-v3" ]; then

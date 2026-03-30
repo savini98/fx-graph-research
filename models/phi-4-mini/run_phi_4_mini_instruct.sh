@@ -16,7 +16,7 @@ echo "Running Phi-4-mini-instruct original model..."
 python phi_4_mini_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 100 > traces/phi_4_mini_instruct_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/phi_4_mini_instruct_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running Phi-4-mini-instruct original model."
 
@@ -34,7 +34,7 @@ echo "Running Phi-4-mini-instruct fixed model..."
 python phi_4_mini_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 100 > traces/phi_4_mini_instruct_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/phi_4_mini_instruct_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 
 # Restore the original modeling_phi3.py file

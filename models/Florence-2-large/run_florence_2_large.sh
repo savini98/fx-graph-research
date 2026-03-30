@@ -17,7 +17,7 @@ echo "Running Florence-2-large original model..."
 python florence_2_large_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 4 2>&1 | tee traces/florence_2_large_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/florence_2_large_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running Florence-2-large original model."
 
@@ -33,4 +33,4 @@ echo "Running Florence-2-large fixed model..."
 python florence_2_large_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 4 2>&1 | tee traces/florence_2_large_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/florence_2_large_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log

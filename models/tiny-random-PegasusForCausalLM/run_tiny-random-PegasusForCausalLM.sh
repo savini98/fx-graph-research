@@ -16,7 +16,7 @@ echo "Running tiny-random-PegasusForCausalLM original model..."
 python tiny-random-PegasusForCausalLM_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 150 > traces/tiny-random-PegasusForCausalLM_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/tiny-random-PegasusForCausalLM_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running tiny-random-PegasusForCausalLM original model."
 
@@ -32,4 +32,4 @@ echo "Running tiny-random-PegasusForCausalLM fixed model..."
 python tiny-random-PegasusForCausalLM_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 150 > traces/tiny-random-PegasusForCausalLM_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 > traces/tiny-random-PegasusForCausalLM_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log

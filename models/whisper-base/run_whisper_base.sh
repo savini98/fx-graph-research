@@ -23,7 +23,7 @@ echo "Running whisper-base original model..."
 python whisper_base_script.py \
     --type $ORIGINAL \
     --runs 30 \
-    --batch_size 16 2>&1 | tee traces/whisper_base_original_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/whisper_base_original_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 echo "Completed running whisper-base original model."
 
@@ -39,7 +39,7 @@ echo "Running whisper-base fixed model..."
 python whisper_base_script.py \
     --type $FIXED \
     --runs 30 \
-    --batch_size 16 2>&1 | tee traces/whisper_base_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
+    --batch_size 0 2>&1 | tee traces/whisper_base_fixed_model_output_$(date +"%Y%m%d_%H%M%S").log
 
 # Clean up cloned model files to free disk space
 if [ -d "whisper-base" ]; then
