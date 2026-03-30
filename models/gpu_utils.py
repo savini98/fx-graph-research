@@ -77,21 +77,37 @@ def find_max_batch_size(make_batch_fn, model_fn, min_bs=1, max_bs=2048,
     forward_mem = peak_mem - baseline_mem
     per_sample_mem = max(forward_mem / probe_bs, 1024)  # at least 1KB to avoid division issues
 
-    # Available memory after reserving for:
-    # - Model weights (baseline_mem)
-    # - torch.compile inductor overhead
-    # - CUDA graph private memory pools
-    # - KV cache growth during generation (grows with each token step)
-    # - dynamo.explain tracing overhead
+    # A single forward pass with 1 decoder token massively underestimates generation
+    # memory. During generation, KV cache grows linearly with output tokens and each
+    # decoder layer stores key/value tensors for ALL previous tokens.
+    # Empirical multiplier: generation uses ~10-50x more per-sample memory than
+    # a single forward pass, depending on model depth and output length.
+    # For safety, multiply per-sample cost by model-size-dependent factor.
+    model_gb = baseline_mem / (1024**3)
+    if model_gb > 3.0:
+        # Large models (t5-3b, whisper-large-v3): generation KV cache is huge
+        gen_multiplier = 50.0
+    elif model_gb > 1.0:
+        # Medium models (bart-large-cnn, rebel-large)
+        gen_multiplier = 20.0
+    elif model_gb > 0.3:
+        # Small-medium models (bart-base, t5-base)
+        gen_multiplier = 10.0
+    else:
+        # Tiny models (t5-small, opus-mt, encoder-only)
+        gen_multiplier = 5.0
+
+    effective_per_sample = per_sample_mem * gen_multiplier
+
+    # Available memory after reserving for model weights
     available_mem = (total_mem * target_utilization) - baseline_mem
     if available_mem <= 0:
-        # Model itself takes most of the GPU — use minimum batch size
         if verbose:
-            print(f"[GPU] Model uses {baseline_mem / (1024**3):.1f} GB, "
+            print(f"[GPU] Model uses {model_gb:.1f} GB, "
                   f"barely fits. Using batch_size={min_bs}", flush=True)
         return min_bs
 
-    estimated_bs = int(available_mem / per_sample_mem)
+    estimated_bs = int(available_mem / effective_per_sample)
     estimated_bs = max(min_bs, min(estimated_bs, max_bs))
 
     if verbose:
