@@ -564,11 +564,18 @@ class BartEncoderLayer(nn.Module):
         hidden_states = residual + hidden_states
         hidden_states = self.final_layer_norm(hidden_states)
 
-        if hidden_states.dtype == torch.float16 and (
-            torch.isinf(hidden_states).any() or torch.isnan(hidden_states).any()
-        ):
+        # GraphMend: Predicated Dynamic Control Flow transformation.
+        # Original: if dtype==fp16 and (isinf or isnan): clamp — causes graph break
+        # (generic_jump on TensorVariable from data-dependent isinf/isnan check).
+        # Fix: use torch.where to keep the computation in a single FX graph.
+        if hidden_states.dtype == torch.float16:
             clamp_value = torch.finfo(hidden_states.dtype).max - 1000
-            hidden_states = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
+            needs_clamp = torch.isinf(hidden_states) | torch.isnan(hidden_states)
+            hidden_states = torch.where(
+                needs_clamp,
+                torch.clamp(hidden_states, min=-clamp_value, max=clamp_value),
+                hidden_states,
+            )
 
         outputs = (hidden_states,)
 
@@ -1243,11 +1250,11 @@ class BartDecoder(BartPreTrainedModel):
         return_legacy_cache = False
         if use_cache and not isinstance(past_key_values, Cache):
             return_legacy_cache = True
-            logger.warning_once(
-                "Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.58.0. "
-                "You should pass an instance of `EncoderDecoderCache` instead, e.g. "
-                "`past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`."
-            )
+            # GraphMend: Deferred Side Effects transformation.
+            # Original: logger.warning_once(...) — causes graph break
+            # ("Logger not supported for non-export cases").
+            # Fix: remove logger call from forward path; the deprecation warning
+            # is a side effect that does not affect computation.
             past_key_values = EncoderDecoderCache.from_legacy_cache(past_key_values)
 
         batch_size, seq_length = inputs_embeds.size()[:-1]
