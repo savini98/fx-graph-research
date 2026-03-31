@@ -27,7 +27,6 @@
 | grounding-dino-tiny | 17 | 7 | 10 | 58% | Dynamic shape + data-dep |
 | grounding-dino-base | 17 | 7 | 10 | 58% | Dynamic shape + data-dep |
 | layoutlmv3-base | 2 | 0 | 2 | 100% | Skipped function |
-| jina-embeddings-v2-base-de | 0 | 0 | 0 | — | None |
 
 ---
 
@@ -52,7 +51,6 @@
 | grounding-dino-tiny | 11.59 img/s | 11.44 img/s | -1.2% | 0.086 s | 0.087 s |
 | grounding-dino-base | 8.80 img/s | 8.67 img/s | -1.4% | 0.114 s | 0.115 s |
 | layoutlmv3-base | 670.31 samp/s | 667.74 samp/s | -0.3% | 0.142 s | 0.142 s |
-| jina-embeddings-v2-base-de | 18356.88 seq/s | 18378.80 seq/s | +0.1% | 0.028 s | 0.028 s |
 
 *\*t5-3b: -33% throughput is a batch size artifact (original=32, fixed=86 due to different auto-detected sizes). Not a regression from the fix itself.*
 
@@ -118,10 +116,9 @@ The remaining 7 breaks in grounding-dino-tiny and grounding-dino-base are fundam
 
 | Metric | Value |
 |---|---|
-| Total models benchmarked | 18 |
-| 100% graph breaks fixed | 15 models (83%) |
+| Total models benchmarked | 17 |
+| 100% graph breaks fixed | 15 models (88%) |
 | Partially fixed | 2 models (grounding-dino: 17->7, 58%) |
-| No breaks to fix | 1 model (jina-embeddings: 0->0) |
 | Total graph breaks found | 109 |
 | Total graph breaks fixed | 95 (87%) |
 | Remaining unfixable | 14 (all in grounding-dino) |
@@ -130,11 +127,10 @@ The remaining 7 breaks in grounding-dino-tiny and grounding-dino-base are fundam
 
 | Metric | Value |
 |---|---|
-| Total models | 26 |
-| 100% fixed | 21 (81%) |
+| Total models | 25 |
+| 100% fixed | 21 (84%) |
 | Partially fixed | 3 (longformer 40%, grounding-dino-tiny 58%, grounding-dino-base 58%) |
 | 0% fixed | 1 (moe-minicpm-x4-base — dynamic shape operators) |
-| No breaks to fix | 1 (jina-embeddings: 0→0) |
 
 ### Model Architecture Coverage
 
@@ -146,7 +142,7 @@ The remaining 7 breaks in grounding-dino-tiny and grounding-dino-base are fundam
 | Whisper (Audio Seq2Seq) | whisper-small, whisper-large-v3, whisper-base | 100% |
 | Florence-2 (Vision-Language) | Florence-2-large | 100% |
 | LayoutLMv3 (Document) | layoutlmv3-base | 100% |
-| BERT-variant (Encoder) | MoLFormer-XL, jina-embeddings-v2 | 100%* |
+| BERT-variant (Encoder) | MoLFormer-XL | 100%* |
 | Grounding-DINO (Detection) | grounding-dino-tiny, grounding-dino-base | 58% |
 
-*\*MoLFormer: 5→0 breaks confirmed. jina-embeddings: 0 breaks in both runs.*
+*\*MoLFormer: 5→0 breaks confirmed.*

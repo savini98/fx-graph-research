@@ -22,7 +22,6 @@ MODELS=(
     "whisper-small"
     "whisper-large-v3"
     "MoLFormer-XL-both-10pct"
-    "jina-embeddings-v2-base-de"
     "layoutlmv3-base"
     "grounding-dino-tiny"
     "grounding-dino-base"
