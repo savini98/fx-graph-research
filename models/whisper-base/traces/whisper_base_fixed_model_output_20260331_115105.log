@@ -1,0 +1,163 @@
+Conda environment: fixed_env
+[11:51:08] start
+[11:51:08] loading processor…
+[11:51:08] loading model
+[GPU] NVIDIA GeForce RTX 3090, 23.5 GB VRAM
+[GPU] Baseline memory (model loaded): 0.14 GB
+[GPU] Probe batch_size=8: peak=0.31 GB, per_sample=22.1 MB
+[GPU] Available for batches: 16.34 GB (target 70% utilization)
+[GPU] Estimated batch size: 75
+[GPU] Verified: batch_size=75 fits (peak 1.68 GB) ✅
+[11:51:09] using batch_size=75
+[11:51:09] eager forward sanity check…
+[11:51:10] eager ok
+[11:51:10] checking Dynamo graph breaks…
+
+===== Graph Break Report =====
+Graph break count: 0
+Number of graphs:  1
+No graph breaks detected.
+===================================
+[11:51:11] compiling with torch.compile (inductor, reduce-overhead)…
+[11:51:12] warmup x1…
+[11:51:25] profiling one step…
+[11:51:26] chrome trace saved: /home/savini98/repos/fx-graph-research/models/whisper-base/traces/whisper-base_trace_fixed_20260331_115125.json
+[11:51:26] ✅ CUDA Graph activity detected:
+  - cudaGraphDestroy
+  - cudaGraphGetNodes
+  - cudaGraphInstantiateWithFlags
+  - cudaGraphLaunch
+[11:51:26] benchmarking 30 timed runs…
+[11:51:26] run 1/30…
+Due to a bug fix in https://github.com/huggingface/transformers/pull/28687 transcription using a multilingual Whisper will default to language detection followed by transcription instead of translation to English.This might be a breaking change for your use case. If you want to instead always translate your audio to English, make sure to pass `language='en'`.
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+[11:51:26] ⏱ Runtime: 0.448 s
+[11:51:26] 📝 Raw new tokens generated: 4
+[11:51:26] 🚀 Throughput: 8.92 tokens/s
+[11:51:26] run 2/30…
+[11:51:27] ⏱ Runtime: 0.380 s
+[11:51:27] 📝 Raw new tokens generated: 4
+[11:51:27] 🚀 Throughput: 10.53 tokens/s
+[11:51:27] run 3/30…
+[11:51:27] ⏱ Runtime: 0.378 s
+[11:51:27] 📝 Raw new tokens generated: 4
+[11:51:27] 🚀 Throughput: 10.57 tokens/s
+[11:51:27] run 4/30…
+[11:51:28] ⏱ Runtime: 0.379 s
+[11:51:28] 📝 Raw new tokens generated: 4
+[11:51:28] 🚀 Throughput: 10.56 tokens/s
+[11:51:28] run 5/30…
+[11:51:28] ⏱ Runtime: 0.379 s
+[11:51:28] 📝 Raw new tokens generated: 4
+[11:51:28] 🚀 Throughput: 10.56 tokens/s
+[11:51:28] run 6/30…
+[11:51:29] ⏱ Runtime: 0.399 s
+[11:51:29] 📝 Raw new tokens generated: 4
+[11:51:29] 🚀 Throughput: 10.03 tokens/s
+[11:51:29] run 7/30…
+[11:51:29] ⏱ Runtime: 0.378 s
+[11:51:29] 📝 Raw new tokens generated: 4
+[11:51:29] 🚀 Throughput: 10.59 tokens/s
+[11:51:29] run 8/30…
+[11:51:30] ⏱ Runtime: 0.378 s
+[11:51:30] 📝 Raw new tokens generated: 4
+[11:51:30] 🚀 Throughput: 10.59 tokens/s
+[11:51:30] run 9/30…
+[11:51:30] ⏱ Runtime: 0.378 s
+[11:51:30] 📝 Raw new tokens generated: 4
+[11:51:30] 🚀 Throughput: 10.59 tokens/s
+[11:51:30] run 10/30…
+[11:51:31] ⏱ Runtime: 0.377 s
+[11:51:31] 📝 Raw new tokens generated: 4
+[11:51:31] 🚀 Throughput: 10.60 tokens/s
+[11:51:31] run 11/30…
+[11:51:31] ⏱ Runtime: 0.378 s
+[11:51:31] 📝 Raw new tokens generated: 4
+[11:51:31] 🚀 Throughput: 10.58 tokens/s
+[11:51:31] run 12/30…
+[11:51:32] ⏱ Runtime: 0.377 s
+[11:51:32] 📝 Raw new tokens generated: 4
+[11:51:32] 🚀 Throughput: 10.60 tokens/s
+[11:51:32] run 13/30…
+[11:51:32] ⏱ Runtime: 0.379 s
+[11:51:32] 📝 Raw new tokens generated: 4
+[11:51:32] 🚀 Throughput: 10.56 tokens/s
+[11:51:32] run 14/30…
+[11:51:33] ⏱ Runtime: 0.378 s
+[11:51:33] 📝 Raw new tokens generated: 4
+[11:51:33] 🚀 Throughput: 10.59 tokens/s
+[11:51:33] run 15/30…
+[11:51:33] ⏱ Runtime: 0.379 s
+[11:51:33] 📝 Raw new tokens generated: 4
+[11:51:33] 🚀 Throughput: 10.56 tokens/s
+[11:51:33] run 16/30…
+[11:51:34] ⏱ Runtime: 0.380 s
+[11:51:34] 📝 Raw new tokens generated: 4
+[11:51:34] 🚀 Throughput: 10.53 tokens/s
+[11:51:34] run 17/30…
+[11:51:34] ⏱ Runtime: 0.378 s
+[11:51:34] 📝 Raw new tokens generated: 4
+[11:51:34] 🚀 Throughput: 10.59 tokens/s
+[11:51:34] run 18/30…
+[11:51:35] ⏱ Runtime: 0.379 s
+[11:51:35] 📝 Raw new tokens generated: 4
+[11:51:35] 🚀 Throughput: 10.55 tokens/s
+[11:51:35] run 19/30…
+[11:51:35] ⏱ Runtime: 0.379 s
+[11:51:35] 📝 Raw new tokens generated: 4
+[11:51:35] 🚀 Throughput: 10.57 tokens/s
+[11:51:35] run 20/30…
+[11:51:36] ⏱ Runtime: 0.379 s
+[11:51:36] 📝 Raw new tokens generated: 4
+[11:51:36] 🚀 Throughput: 10.54 tokens/s
+[11:51:36] run 21/30…
+[11:51:36] ⏱ Runtime: 0.379 s
+[11:51:36] 📝 Raw new tokens generated: 4
+[11:51:36] 🚀 Throughput: 10.55 tokens/s
+[11:51:36] run 22/30…
+[11:51:36] ⏱ Runtime: 0.380 s
+[11:51:36] 📝 Raw new tokens generated: 4
+[11:51:36] 🚀 Throughput: 10.54 tokens/s
+[11:51:37] run 23/30…
+[11:51:37] ⏱ Runtime: 0.379 s
+[11:51:37] 📝 Raw new tokens generated: 4
+[11:51:37] 🚀 Throughput: 10.54 tokens/s
+[11:51:37] run 24/30…
+[11:51:37] ⏱ Runtime: 0.380 s
+[11:51:37] 📝 Raw new tokens generated: 4
+[11:51:37] 🚀 Throughput: 10.51 tokens/s
+[11:51:38] run 25/30…
+[11:51:38] ⏱ Runtime: 0.379 s
+[11:51:38] 📝 Raw new tokens generated: 4
+[11:51:38] 🚀 Throughput: 10.55 tokens/s
+[11:51:38] run 26/30…
+[11:51:38] ⏱ Runtime: 0.380 s
+[11:51:38] 📝 Raw new tokens generated: 4
+[11:51:38] 🚀 Throughput: 10.54 tokens/s
+[11:51:39] run 27/30…
+[11:51:39] ⏱ Runtime: 0.379 s
+[11:51:39] 📝 Raw new tokens generated: 4
+[11:51:39] 🚀 Throughput: 10.55 tokens/s
+[11:51:39] run 28/30…
+[11:51:39] ⏱ Runtime: 0.378 s
+[11:51:39] 📝 Raw new tokens generated: 4
+[11:51:39] 🚀 Throughput: 10.57 tokens/s
+[11:51:39] run 29/30…
+[11:51:40] ⏱ Runtime: 0.379 s
+[11:51:40] 📝 Raw new tokens generated: 4
+[11:51:40] 🚀 Throughput: 10.55 tokens/s
+[11:51:40] run 30/30…
+[11:51:40] ⏱ Runtime: 0.379 s
+[11:51:40] 📝 Raw new tokens generated: 4
+[11:51:40] 🚀 Throughput: 10.56 tokens/s
+
+===== Benchmark summary =====
+Timed runs:       30
+Avg throughput:   10.49 tokens/s
+P50 throughput:   10.56 tokens/s
+P95 throughput:   10.59 tokens/s
+Std dev (tps):    0.31
+Avg runtime:      0.382 s
+Avg new tokens:   4.0
+/home/savini98/repos/fx-graph-research/transformers-modified/src/transformers/models/whisper/modeling_whisper.py
+[11:51:40] done

@@ -21,9 +21,9 @@
 | chronos-bolt-small | 6 | 0 | 6 | 100% | Logger |
 | whisper-small | 3 | 0 | 3 | 100% | Logger |
 | whisper-large-v3 | 3 | 0 | 3 | 100% | Logger |
-| whisper-base | N/A | N/A | — | — | Logger (dynamo OOM) |
+| whisper-base | 3 | 0 | 3 | 100% | Logger |
 | Florence-2-large | 7 | 0 | 7 | 100% | Data-dep branch + jump |
-| MoLFormer-XL-both-10pct | N/A | N/A | — | — | Data-dep op (dynamo OOM) |
+| MoLFormer-XL-both-10pct | 5 | 0 | 5 | 100% | Data-dep op + guard |
 | grounding-dino-tiny | 17 | 7 | 10 | 58% | Dynamic shape + data-dep |
 | grounding-dino-base | 17 | 7 | 10 | 58% | Dynamic shape + data-dep |
 | layoutlmv3-base | 2 | 0 | 2 | 100% | Skipped function |
@@ -119,12 +119,11 @@ The remaining 7 breaks in grounding-dino-tiny and grounding-dino-base are fundam
 | Metric | Value |
 |---|---|
 | Total models benchmarked | 18 |
-| 100% graph breaks fixed | 13 models (72%) |
+| 100% graph breaks fixed | 15 models (83%) |
 | Partially fixed | 2 models (grounding-dino: 17->7, 58%) |
 | No breaks to fix | 1 model (jina-embeddings: 0->0) |
-| Missing break data (dynamo OOM) | 2 models (MoLFormer, whisper-base) |
-| Total graph breaks found | 101 |
-| Total graph breaks fixed | 87 (86%) |
+| Total graph breaks found | 109 |
+| Total graph breaks fixed | 95 (87%) |
 | Remaining unfixable | 14 (all in grounding-dino) |
 
 ### Combined with Original Paper Models (8 models)
@@ -132,10 +131,10 @@ The remaining 7 breaks in grounding-dino-tiny and grounding-dino-base are fundam
 | Metric | Value |
 |---|---|
 | Total models | 26 |
-| 100% fixed | 19 (73%) |
-| Partially fixed | 4 (longformer 40%, grounding-dino-tiny 58%, grounding-dino-base 58%) |
+| 100% fixed | 21 (81%) |
+| Partially fixed | 3 (longformer 40%, grounding-dino-tiny 58%, grounding-dino-base 58%) |
 | 0% fixed | 1 (moe-minicpm-x4-base — dynamic shape operators) |
-| No breaks / missing data | 2 |
+| No breaks to fix | 1 (jina-embeddings: 0→0) |
 
 ### Model Architecture Coverage
 
@@ -150,4 +149,4 @@ The remaining 7 breaks in grounding-dino-tiny and grounding-dino-base are fundam
 | BERT-variant (Encoder) | MoLFormer-XL, jina-embeddings-v2 | 100%* |
 | Grounding-DINO (Detection) | grounding-dino-tiny, grounding-dino-base | 58% |
 
-*\*MoLFormer verified at 5->0 breaks in prior run; dynamo.explain OOM'd with auto batch size.*
+*\*MoLFormer: 5→0 breaks confirmed. jina-embeddings: 0 breaks in both runs.*

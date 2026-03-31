@@ -1,0 +1,163 @@
+Conda environment: fixed_env
+[11:50:45] start
+[11:50:45] loading tokenizer…
+[11:50:45] fixed modeling file applied → /home/savini98/.cache/huggingface/modules/transformers_modules/ibm-research/MoLFormer-XL-both-10pct/7b12d946c181a37f6012b9dc3b002275de070314/modeling_molformer.py
+[11:50:45] loading model
+[GPU] NVIDIA GeForce RTX 3090, 23.5 GB VRAM
+[GPU] Baseline memory (model loaded): 0.17 GB
+We strongly recommend passing in an `attention_mask` since your input_ids may be padded. See https://huggingface.co/docs/transformers/troubleshooting#incorrect-output-when-padding-tokens-arent-masked.
+[GPU] Probe batch_size=8: peak=0.18 GB, per_sample=2.0 MB
+[GPU] Available for batches: 16.31 GB (target 70% utilization)
+[GPU] Estimated batch size: 837
+[GPU] Verified: batch_size=837 fits (peak 0.97 GB) ✅
+[11:50:48] using batch_size=837
+[11:50:48] eager forward sanity check…
+[11:50:49] eager ok
+[11:50:49] checking Dynamo graph breaks…
+
+===== Graph Break Report =====
+Graph break count: 0
+Number of graphs:  1
+No graph breaks detected.
+===================================
+[11:50:51] compiling with torch.compile (inductor, reduce-overhead)…
+[11:50:51] warmup x1…
+[11:51:03] profiling one step…
+[11:51:04] chrome trace saved: /home/savini98/repos/fx-graph-research/models/MoLFormer-XL-both-10pct/traces/MoLFormer-XL-both-10pct_trace_fixed_20260331_115103.json
+[11:51:04] ✅ CUDA Graph activity detected:
+  - cudaGraphDestroy
+  - cudaGraphGetNodes
+  - cudaGraphInstantiateWithFlags
+  - cudaGraphLaunch
+[11:51:04] benchmarking 30 timed runs…
+[11:51:04] run 1/30…
+[11:51:04] ⏱ Runtime: 0.115 s
+[11:51:04] 📝 Sequences in batch: 837
+[11:51:04] 🚀 Throughput: 7285.60 sequences/s
+[11:51:04] run 2/30…
+[11:51:04] ⏱ Runtime: 0.118 s
+[11:51:04] 📝 Sequences in batch: 837
+[11:51:04] 🚀 Throughput: 7092.46 sequences/s
+[11:51:04] run 3/30…
+[11:51:04] ⏱ Runtime: 0.118 s
+[11:51:04] 📝 Sequences in batch: 837
+[11:51:04] 🚀 Throughput: 7100.02 sequences/s
+[11:51:04] run 4/30…
+[11:51:04] ⏱ Runtime: 0.116 s
+[11:51:04] 📝 Sequences in batch: 837
+[11:51:04] 🚀 Throughput: 7186.13 sequences/s
+[11:51:04] run 5/30…
+[11:51:05] ⏱ Runtime: 0.117 s
+[11:51:05] 📝 Sequences in batch: 837
+[11:51:05] 🚀 Throughput: 7181.51 sequences/s
+[11:51:05] run 6/30…
+[11:51:05] ⏱ Runtime: 0.117 s
+[11:51:05] 📝 Sequences in batch: 837
+[11:51:05] 🚀 Throughput: 7181.88 sequences/s
+[11:51:05] run 7/30…
+[11:51:05] ⏱ Runtime: 0.116 s
+[11:51:05] 📝 Sequences in batch: 837
+[11:51:05] 🚀 Throughput: 7184.61 sequences/s
+[11:51:05] run 8/30…
+[11:51:05] ⏱ Runtime: 0.120 s
+[11:51:05] 📝 Sequences in batch: 837
+[11:51:05] 🚀 Throughput: 7001.19 sequences/s
+[11:51:05] run 9/30…
+[11:51:05] ⏱ Runtime: 0.117 s
+[11:51:05] 📝 Sequences in batch: 837
+[11:51:05] 🚀 Throughput: 7135.92 sequences/s
+[11:51:05] run 10/30…
+[11:51:05] ⏱ Runtime: 0.117 s
+[11:51:05] 📝 Sequences in batch: 837
+[11:51:05] 🚀 Throughput: 7168.08 sequences/s
+[11:51:05] run 11/30…
+[11:51:05] ⏱ Runtime: 0.117 s
+[11:51:05] 📝 Sequences in batch: 837
+[11:51:05] 🚀 Throughput: 7181.16 sequences/s
+[11:51:05] run 12/30…
+[11:51:05] ⏱ Runtime: 0.117 s
+[11:51:05] 📝 Sequences in batch: 837
+[11:51:05] 🚀 Throughput: 7182.06 sequences/s
+[11:51:05] run 13/30…
+[11:51:06] ⏱ Runtime: 0.117 s
+[11:51:06] 📝 Sequences in batch: 837
+[11:51:06] 🚀 Throughput: 7179.88 sequences/s
+[11:51:06] run 14/30…
+[11:51:06] ⏱ Runtime: 0.117 s
+[11:51:06] 📝 Sequences in batch: 837
+[11:51:06] 🚀 Throughput: 7183.66 sequences/s
+[11:51:06] run 15/30…
+[11:51:06] ⏱ Runtime: 0.117 s
+[11:51:06] 📝 Sequences in batch: 837
+[11:51:06] 🚀 Throughput: 7173.38 sequences/s
+[11:51:06] run 16/30…
+[11:51:06] ⏱ Runtime: 0.118 s
+[11:51:06] 📝 Sequences in batch: 837
+[11:51:06] 🚀 Throughput: 7073.40 sequences/s
+[11:51:06] run 17/30…
+[11:51:06] ⏱ Runtime: 0.118 s
+[11:51:06] 📝 Sequences in batch: 837
+[11:51:06] 🚀 Throughput: 7102.33 sequences/s
+[11:51:06] run 18/30…
+[11:51:06] ⏱ Runtime: 0.117 s
+[11:51:06] 📝 Sequences in batch: 837
+[11:51:06] 🚀 Throughput: 7136.27 sequences/s
+[11:51:06] run 19/30…
+[11:51:06] ⏱ Runtime: 0.117 s
+[11:51:06] 📝 Sequences in batch: 837
+[11:51:06] 🚀 Throughput: 7178.90 sequences/s
+[11:51:06] run 20/30…
+[11:51:06] ⏱ Runtime: 0.116 s
+[11:51:06] 📝 Sequences in batch: 837
+[11:51:06] 🚀 Throughput: 7186.11 sequences/s
+[11:51:06] run 21/30…
+[11:51:06] ⏱ Runtime: 0.117 s
+[11:51:06] 📝 Sequences in batch: 837
+[11:51:06] 🚀 Throughput: 7176.26 sequences/s
+[11:51:06] run 22/30…
+[11:51:07] ⏱ Runtime: 0.117 s
+[11:51:07] 📝 Sequences in batch: 837
+[11:51:07] 🚀 Throughput: 7174.28 sequences/s
+[11:51:07] run 23/30…
+[11:51:07] ⏱ Runtime: 0.117 s
+[11:51:07] 📝 Sequences in batch: 837
+[11:51:07] 🚀 Throughput: 7170.97 sequences/s
+[11:51:07] run 24/30…
+[11:51:07] ⏱ Runtime: 0.118 s
+[11:51:07] 📝 Sequences in batch: 837
+[11:51:07] 🚀 Throughput: 7123.15 sequences/s
+[11:51:07] run 25/30…
+[11:51:07] ⏱ Runtime: 0.118 s
+[11:51:07] 📝 Sequences in batch: 837
+[11:51:07] 🚀 Throughput: 7109.19 sequences/s
+[11:51:07] run 26/30…
+[11:51:07] ⏱ Runtime: 0.118 s
+[11:51:07] 📝 Sequences in batch: 837
+[11:51:07] 🚀 Throughput: 7110.82 sequences/s
+[11:51:07] run 27/30…
+[11:51:07] ⏱ Runtime: 0.117 s
+[11:51:07] 📝 Sequences in batch: 837
+[11:51:07] 🚀 Throughput: 7125.28 sequences/s
+[11:51:07] run 28/30…
+[11:51:07] ⏱ Runtime: 0.117 s
+[11:51:07] 📝 Sequences in batch: 837
+[11:51:07] 🚀 Throughput: 7180.22 sequences/s
+[11:51:07] run 29/30…
+[11:51:07] ⏱ Runtime: 0.117 s
+[11:51:07] 📝 Sequences in batch: 837
+[11:51:07] 🚀 Throughput: 7165.62 sequences/s
+[11:51:07] run 30/30…
+[11:51:08] ⏱ Runtime: 0.117 s
+[11:51:08] 📝 Sequences in batch: 837
+[11:51:08] 🚀 Throughput: 7171.24 sequences/s
+
+===== Benchmark summary =====
+Timed runs:          30
+Batch size:          837
+Avg throughput:      7153.39 sequences/s
+P50 throughput:      7172.31 sequences/s
+P95 throughput:      7186.11 sequences/s
+Std dev (seqs/s):    49.64
+Avg runtime:         0.117 s
+/home/savini98/miniconda3/envs/fixed_env/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py
+[11:51:08] done
