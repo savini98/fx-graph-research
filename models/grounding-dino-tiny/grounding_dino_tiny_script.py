@@ -204,15 +204,15 @@ def main():
         _ = model(**batch)
         torch.cuda.synchronize()
     t("eager ok")
-
-    # Detect and report graph breaks before compiling
-    print_graph_breaks(model, batch)
-
     import sys as _sys
     _sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
     from profiling_utils import profile_small_batch
     profile_small_batch(model, batch, compile_model,
                         os.path.join(os.path.dirname(os.path.abspath(__file__)), "traces", f"profile_{TYPE}.json"))
+
+    # Detect and report graph breaks before compiling
+    print_graph_breaks(model, batch)
+
     compiled = compile_model(model)
     warmup(compiled, batch, iters=1)
 

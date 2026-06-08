@@ -196,6 +196,11 @@ def main():
         _ = model(**batch)
         torch.cuda.synchronize()
     t("eager ok")
+    import sys as _sys
+    _sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+    from profiling_utils import profile_small_batch
+    profile_small_batch(model, batch, compile_model,
+                        os.path.join(os.path.dirname(os.path.abspath(__file__)), "traces", f"profile_{TYPE}.json"))
 
     # Detect and report graph breaks with a small batch (dynamo.explain needs extra memory)
     small_batch = fixed_batch(processor, bs=min(BATCH_SIZE, 4))
@@ -203,11 +208,6 @@ def main():
     del small_batch
     torch.cuda.empty_cache()
 
-    import sys as _sys
-    _sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-    from profiling_utils import profile_small_batch
-    profile_small_batch(model, batch, compile_model,
-                        os.path.join(os.path.dirname(os.path.abspath(__file__)), "traces", f"profile_{TYPE}.json"))
     compiled = compile_model(model)
     warmup(compiled, batch, iters=1)
 
