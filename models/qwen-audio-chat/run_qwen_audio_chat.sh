@@ -25,9 +25,9 @@ echo "Running Qwen-Audio-Chat fixed model..."
 # backup Qwen-Audio-Chat/modeling_qwen.py first to Qwen-Audio-Chat/modeling_qwen.py.bak
 cp Qwen-Audio-Chat/modeling_qwen.py Qwen-Audio-Chat/modeling_qwen.py.bak
 # in case we mess up the original file, we can restore it from here
-cd Qwen-Audio-Chat/modeling_qwen.py original_model_files/modeling_qwen_original.py
-# overwrite
-cp fixed_model_files/modeling_qwen_fixed.py Qwen-Audio-Chat/modeling_qwen.py
+cp Qwen-Audio-Chat/modeling_qwen.py original_model_files/modeling_qwen_original.py
+# overwrite with the GraphMend-fixed modeling file (fixed_model_files lives at repo root)
+cp ../../fixed_model_files/modeling_qwen_fixed.py Qwen-Audio-Chat/modeling_qwen.py
 
 # Running Qwen-Audio-Chat model fixed
 echo "Running Qwen-Audio-Chat fixed model..."

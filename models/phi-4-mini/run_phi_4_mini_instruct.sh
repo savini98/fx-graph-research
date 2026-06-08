@@ -25,9 +25,9 @@ echo "Running Phi-4-mini-instruct fixed model..."
 # backup Phi-4-mini-instruct/modeling_phi3.py first to Phi-4-mini-instruct/modeling_phi3.py.bak
 cp Phi-4-mini-instruct/modeling_phi3.py Phi-4-mini-instruct/modeling_phi3.py.bak
 # in case we mess up the original file, we can restore it from here
-cd Phi-4-mini-instruct/modeling_phi3.py original_model_files/modeling_phi3_original.py
-# overwrite
-cp fixed_model_files/modeling_phi3_fixed.py Phi-4-mini-instruct/modeling_phi3.py
+cp Phi-4-mini-instruct/modeling_phi3.py original_model_files/modeling_phi3_original.py
+# overwrite with the GraphMend-fixed modeling file (fixed_model_files lives at repo root)
+cp ../../fixed_model_files/modeling_phi3_fixed.py Phi-4-mini-instruct/modeling_phi3.py
 
 # Running Phi-4-mini-instruct model original
 echo "Running Phi-4-mini-instruct fixed model..."

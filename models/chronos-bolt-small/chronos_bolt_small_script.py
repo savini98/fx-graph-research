@@ -209,7 +209,11 @@ def main():
     # Detect and report graph breaks
     print_graph_breaks(pipeline, context, PREDICTION_LENGTH)
 
-    # Warmup (pipeline handles its own compilation internally)
+    # Compile the inner model with torch.compile for actual PyTorch 2 optimization
+    t("compiling inner model with torch.compile (inductor, reduce-overhead)…")
+    pipeline.model = torch.compile(pipeline.model, backend="inductor", mode="reduce-overhead", fullgraph=False)
+
+    # Warmup (triggers compilation on first run)
     warmup_pipeline(pipeline, context, PREDICTION_LENGTH, iters=1)
 
     dt_str = datetime.now().strftime("%Y%m%d_%H%M%S")

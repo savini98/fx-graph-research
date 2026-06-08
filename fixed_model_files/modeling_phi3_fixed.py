@@ -360,7 +360,7 @@ class Phi3RotaryEmbedding(nn.Module):
         if "dynamic" in self.rope_type:
             self._dynamic_frequency_update(position_ids, device=x.device)
         elif self.rope_type == "longrope":
-            self._longrope_frequency_update( device=x.device)
+            self._longrope_frequency_update(position_ids, device=x.device)
 
         # Core RoPE block
         inv_freq_expanded = self.inv_freq[None, :, None].float().expand(position_ids.shape[0], -1, 1)
@@ -380,15 +380,25 @@ class Phi3RotaryEmbedding(nn.Module):
 
         return cos.to(dtype=x.dtype), sin.to(dtype=x.dtype)
 
-    def _longrope_frequency_update(self, device):
-        """Longrope uses long factor if sequence is larger than original pretraining length, short otherwise."""
+    def _longrope_frequency_update(self, position_ids, device):
+        """Longrope uses long factor if sequence is larger than original pretraining length, short otherwise.
+
+        Graph-break-free variant: the original code had a data-dependent Python
+        branch on `seq_len > original_max_position_embeddings`. We replace it
+        with a `torch.where` so the whole update stays in a single FX graph.
+        """
+        seq_len = torch.max(position_ids) + 1
+        if hasattr(self.config, "original_max_position_embeddings"):
+            original_max_position_embeddings = self.config.original_max_position_embeddings
+        else:
+            original_max_position_embeddings = self.config.max_position_embeddings
+
         self.original_inv_freq = self.original_inv_freq.to(device)
-        self.register_buffer("inv_freq", self.original_inv_freq, persistent=False)
 
         if not hasattr(self, "long_inv_freq"):
-            self.long_inv_freq, _ = self.rope_init_fn(self.config, device, seq_len=original_max_position_embeddings + 1)
-
-        self.original_inv_freq = self.original_inv_freq.to(device)
+            self.long_inv_freq, _ = self.rope_init_fn(
+                self.config, device, seq_len=original_max_position_embeddings + 1
+            )
 
         condition = seq_len > original_max_position_embeddings
         inv_freq = torch.where(condition, self.long_inv_freq, self.original_inv_freq)

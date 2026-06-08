@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jac cache
+__jac_gen__/
+.jac_mypy_cache/
+*.jir
+
+# Secrets — never commit SSH keys
+id_ed25519
+id_ed25519.pub
+id_rsa
+*.pem
+
+# Server run logs / caches
+g100_run*.out
+.hf_cache/
