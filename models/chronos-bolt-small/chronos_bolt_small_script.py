@@ -209,33 +209,42 @@ def main():
     # Detect and report graph breaks
     print_graph_breaks(pipeline, context, PREDICTION_LENGTH)
 
-    # Compile the inner model with torch.compile for actual PyTorch 2 optimization
+    # --- small-batch (bs=1) profiling: cold-start, warm, launches, kernels ---
+    import torch._dynamo as _dyn, time as _ctime, json as _cjson, statistics as _cstats
+    _dyn.reset()
+    _sb_ctx = make_batch(bs=1, seq_len=128)
+    pipeline.model = torch.compile(pipeline.model, backend="inductor", mode="reduce-overhead", fullgraph=False)
+    torch.cuda.synchronize(); _c0 = _ctime.perf_counter()
+    pipeline.predict(inputs=_sb_ctx, prediction_length=PREDICTION_LENGTH); torch.cuda.synchronize()
+    print(f"Cold start (compile): {(_ctime.perf_counter() - _c0) * 1000:.1f} ms", flush=True)
+    _wl = []
+    for _ in range(20):
+        torch.cuda.synchronize(); _w0 = _ctime.perf_counter()
+        pipeline.predict(inputs=_sb_ctx, prediction_length=PREDICTION_LENGTH); torch.cuda.synchronize()
+        _wl.append((_ctime.perf_counter() - _w0) * 1000)
+    print(f"Warm forward: {_cstats.median(_wl):.4f} ms", flush=True)
+    try:
+        _ptp = os.path.join(TRACES_DIR, f"profile_{TYPE}.json")
+        os.makedirs(TRACES_DIR, exist_ok=True)
+        with profile(activities=[ProfilerActivity.CUDA, ProfilerActivity.CPU], with_stack=False) as _pf:
+            pipeline.predict(inputs=_sb_ctx, prediction_length=PREDICTION_LENGTH); torch.cuda.synchronize()
+        _pf.export_chrome_trace(_ptp)
+        _ev = _cjson.load(open(_ptp)).get("traceEvents", [])
+        print(f"CUDA graph launches: {sum(1 for e in _ev if isinstance(e, dict) and 'cudaGraphLaunch' in e.get('name', ''))}", flush=True)
+        print(f"Kernel count: {sum(1 for e in _ev if isinstance(e, dict) and e.get('cat', '') == 'kernel')}", flush=True)
+    except Exception as _ex:
+        print(f"profile metric counting failed: {_ex}", flush=True)
+    _dyn.reset()
+
+    # Compile the inner model for the big-batch throughput benchmark
     t("compiling inner model with torch.compile (inductor, reduce-overhead)…")
     pipeline.model = torch.compile(pipeline.model, backend="inductor", mode="reduce-overhead", fullgraph=False)
-
-    # Warmup (triggers compilation on first run)
-    import time as _time
-    torch.cuda.synchronize()
-    _cold_t0 = _time.perf_counter()
     warmup_pipeline(pipeline, context, PREDICTION_LENGTH, iters=1)
-    torch.cuda.synchronize()
-    print(f"Cold start (compile): {(_time.perf_counter() - _cold_t0) * 1000:.1f} ms")
 
     dt_str = datetime.now().strftime("%Y%m%d_%H%M%S")
     safe_model_id = os.path.basename(MODEL_ID)
     trace_path = os.path.join(TRACES_DIR, f"{safe_model_id}_trace_{TYPE}_{dt_str}.json")
     hit, names = detect_cudagraphs_pipeline(pipeline, context, PREDICTION_LENGTH, trace=trace_path)
-    try:
-        import json as _json
-        with open(trace_path) as _tf:
-            _tr = _json.load(_tf)
-        _evs = _tr.get("traceEvents", _tr if isinstance(_tr, list) else [])
-        _launch = sum(1 for _e in _evs if isinstance(_e, dict) and "cudaGraphLaunch" in _e.get("name", ""))
-        _kern = sum(1 for _e in _evs if isinstance(_e, dict) and _e.get("cat", "") == "kernel")
-        print(f"CUDA graph launches: {_launch}")
-        print(f"Kernel count: {_kern}")
-    except Exception as _ex:
-        print(f"trace metric counting failed: {_ex}")
     if hit:
         t("✅ CUDA Graph activity detected:")
         for n in names: print("  -", n)

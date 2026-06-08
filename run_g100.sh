@@ -60,6 +60,12 @@ MINICONDA_DIR="${MINICONDA_DIR:-$HOME/miniconda3}"
 export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}"
 export HF_HUB_DISABLE_TELEMETRY=1
 export TOKENIZERS_PARALLELISM=false
+# Disable the Inductor compile caches so the cold-start (run-1) measurement is a
+# GENUINE cold compile for every model/variant — otherwise a prior compile
+# (e.g. dynamo.explain for graph-break counting) could warm the cache and make
+# cold-start inconsistent.
+export TORCHINDUCTOR_FX_GRAPH_CACHE=0
+export TORCHINDUCTOR_AUTOGRAD_CACHE=0
 
 LOG_DIR="$REPO_DIR/logs"
 mkdir -p "$LOG_DIR" "$HF_HOME"
