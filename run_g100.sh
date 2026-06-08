@@ -266,12 +266,20 @@ ensure_weights() {
         fi
         echo "   ⤓ downloading weights for $mdir ($url)"
         rm -rf "$target"
-        if git clone "$url" "$target"; then
-            ( cd "$target" && git lfs install >/dev/null 2>&1 && git lfs pull ) \
-                || echo "     (git lfs pull reported an issue for $mdir)"
-            # Strip bloat: .git holds a duplicate LFS object cache; HF repos ship
-            # TF/Flax copies PyTorch never uses.
+        # Clone WITHOUT smudging (pointers only, tiny), then pull just the
+        # PyTorch weights. This avoids ever downloading the TF (.h5) / Flax
+        # (.msgpack) copies — e.g. t5-3b is 55GB fully but ~11GB safetensors.
+        if GIT_LFS_SKIP_SMUDGE=1 git clone "$url" "$target"; then
+            (
+                cd "$target" && git lfs install >/dev/null 2>&1
+                git lfs pull --include="*.safetensors" 2>/dev/null
+                # Fall back to .bin only if the repo has no safetensors.
+                if ! find . -name '*.safetensors' -size +1M 2>/dev/null | grep -q .; then
+                    git lfs pull --include="*.bin" 2>/dev/null
+                fi
+            ) || echo "     (git lfs pull reported an issue for $mdir)"
             rm -rf "$target/.git"
+            # Drop leftover non-PyTorch / redundant pointer files.
             find "$target" \( -name '*.h5' -o -name '*.msgpack' -o -name '*.ot' \) -delete 2>/dev/null
             if ls "$target"/*.safetensors >/dev/null 2>&1; then
                 find "$target" -name '*.bin' -delete 2>/dev/null
