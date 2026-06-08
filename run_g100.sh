@@ -42,12 +42,14 @@ PYTHON_VERSION="${PYTHON_VERSION:-3.12}"
 # PyTorch CUDA wheel channel. cu118 matches the published GraphMend results.
 # If the G100 has a newer GPU (e.g. Hopper sm_90) switch to cu121/cu124.
 CUDA_WHEEL="${CUDA_WHEEL:-cu118}"
-# Pin torch to the published GraphMend version (2.7). Newer torch (e.g. 2.12)
-# changes empty-tensor reshape semantics and breaks some benchmark scripts.
-# Empty TORCH_VERSION => let pip pick the channel's latest.
-TORCH_VERSION="${TORCH_VERSION:-2.7.1}"
-TORCHVISION_VERSION="${TORCHVISION_VERSION:-0.22.1}"
-TORCHAUDIO_VERSION="${TORCHAUDIO_VERSION:-2.7.1}"
+# Torch version. Empty => pip installs the channel's latest, which on cu126 is
+# torch 2.12 + triton 3.7. That combo is REQUIRED on H100 (sm_90): torch 2.7.1's
+# bundled triton 3.3.1 hits a PY_SSIZE_T_CLEAN codegen bug for some models'
+# kernels. (The empty-tensor reshape errors that looked version-related were
+# actually the batch_size=0 bug, fixed separately in the model scripts.)
+TORCH_VERSION="${TORCH_VERSION:-}"
+TORCHVISION_VERSION="${TORCHVISION_VERSION:-}"
+TORCHAUDIO_VERSION="${TORCHAUDIO_VERSION:-}"
 REBUILD_ENVS="${REBUILD_ENVS:-0}"
 MINICONDA_DIR="${MINICONDA_DIR:-$HOME/miniconda3}"
 
