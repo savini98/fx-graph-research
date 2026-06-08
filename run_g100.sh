@@ -218,7 +218,7 @@ create_env() {
     fi
     "$env_py" -m pip install accelerate safetensors psutil nvidia-ml-py3 \
         matplotlib tiktoken einops transformers_stream_generator \
-        sentencepiece protobuf sacremoses
+        sentencepiece protobuf sacremoses timm
     # chronos-bolt-small needs this; harmless elsewhere
     "$env_py" -m pip install chronos-forecasting || echo "  (chronos-forecasting optional install skipped)"
 
