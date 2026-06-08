@@ -212,6 +212,7 @@ def main():
     # --- small-batch (bs=1) profiling: cold-start, warm, launches, kernels ---
     import torch._dynamo as _dyn, time as _ctime, json as _cjson, statistics as _cstats
     _dyn.reset()
+    _orig_pm = pipeline.model
     _sb_ctx = make_batch(bs=1, seq_len=128)
     pipeline.model = torch.compile(pipeline.model, backend="inductor", mode="reduce-overhead", fullgraph=False)
     torch.cuda.synchronize(); _c0 = _ctime.perf_counter()
@@ -235,6 +236,7 @@ def main():
     except Exception as _ex:
         print(f"profile metric counting failed: {_ex}", flush=True)
     _dyn.reset()
+    pipeline.model = _orig_pm  # restore uncompiled model (avoid double-compile)
 
     # Compile the inner model for the big-batch throughput benchmark
     t("compiling inner model with torch.compile (inductor, reduce-overhead)…")
