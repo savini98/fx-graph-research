@@ -113,6 +113,12 @@ PREDOWNLOAD=(
     "phi-4-mini|https://huggingface.co/microsoft/Phi-4-mini-instruct|Phi-4-mini-instruct"
     "qwen-audio-chat|https://huggingface.co/Qwen/Qwen-Audio-Chat|Qwen-Audio-Chat"
     "tiny-random-PegasusForCausalLM|https://huggingface.co/hf-tiny-model-private/tiny-random-PegasusForCausalLM|tiny-random-PegasusForCausalLM"
+    # Large self-cloning models whose HF repos ship every framework format
+    # (PyTorch+TF+Flax+safetensors + a duplicate .git LFS cache). Fetching them
+    # here strips the bloat (e.g. t5-3b: 55GB clone -> ~11GB). Their run scripts
+    # clone only "if [ ! -d <dest> ]", so a pre-provided dir makes them skip it.
+    "t5-3b|https://huggingface.co/google-t5/t5-3b|t5-3b"
+    "whisper-large-v3|https://huggingface.co/openai/whisper-large-v3|whisper-large-v3"
 )
 
 banner() {
