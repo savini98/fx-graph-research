@@ -53,8 +53,11 @@ TORCHAUDIO_VERSION="${TORCHAUDIO_VERSION:-}"
 REBUILD_ENVS="${REBUILD_ENVS:-0}"
 MINICONDA_DIR="${MINICONDA_DIR:-$HOME/miniconda3}"
 
-# Keep all HuggingFace downloads inside the repo so they are reused across runs.
-export HF_HOME="${HF_HOME:-$REPO_DIR/.hf_cache}"
+# Use the DEFAULT HF cache location. The trust_remote_code models (MoLFormer,
+# Florence) hard-code "~/.cache/huggingface/modules/..." when locating the
+# cached modeling file to overwrite with the fixed version — a custom HF_HOME
+# makes them silently skip the fix (graph breaks stay unfixed).
+export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}"
 export HF_HUB_DISABLE_TELEMETRY=1
 export TOKENIZERS_PARALLELISM=false
 
@@ -322,10 +325,24 @@ run_models() {
         ensure_weights "$model"
 
         # Subshell + cd so scripts that assume cwd==their dir still work.
-        if ( cd "$model_dir" && bash "$(basename "$run_script")" ); then
+        local run_exit=0
+        ( cd "$model_dir" && bash "$(basename "$run_script")" ) || run_exit=$?
+
+        # The run scripts pipe python through `tee`, so their exit code is tee's
+        # (0) even when python crashed. Verify BOTH phases actually produced an
+        # "Avg throughput" line before calling it a pass.
+        local verify_ok=1 missing=""
+        for ph in original fixed; do
+            local plog
+            plog="$(ls -t "$model_dir"/traces/*"${ph}"*model_output*.log 2>/dev/null | head -1)"
+            if [ -z "$plog" ] || ! grep -aq "Avg throughput" "$plog"; then
+                verify_ok=0; missing="$missing $ph"
+            fi
+        done
+        if [ "$run_exit" -eq 0 ] && [ "$verify_ok" -eq 1 ]; then
             echo "✅ $model done"; PASSED+=("$model")
         else
-            echo "❌ $model FAILED (exit $?)"; FAILED+=("$model")
+            echo "❌ $model FAILED (exit $run_exit; no throughput in:${missing:- none})"; FAILED+=("$model")
         fi
         # Free this model's weights before starting the next (disk-limited box).
         reclaim_weights "$model_dir"
