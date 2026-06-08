@@ -276,10 +276,14 @@ ensure_weights() {
         if GIT_LFS_SKIP_SMUDGE=1 git clone "$url" "$target"; then
             (
                 cd "$target" && git lfs install >/dev/null 2>&1
-                git lfs pull --include="*.safetensors" 2>/dev/null
+                # Pull weights (safetensors) + tokenizer LFS files (spiece.model,
+                # *.spm, vocab/merges) — otherwise SentencePiece tokenizers
+                # (T5/Pegasus) load from a 131-byte pointer and break.
+                TOKFILES="*.model,*.spm,*.bpe,*.vocab,*.txt,*.json"
+                git lfs pull --include="*.safetensors,$TOKFILES" 2>/dev/null
                 # Fall back to .bin only if the repo has no safetensors.
                 if ! find . -name '*.safetensors' -size +1M 2>/dev/null | grep -q .; then
-                    git lfs pull --include="*.bin" 2>/dev/null
+                    git lfs pull --include="*.bin,$TOKFILES" 2>/dev/null
                 fi
             ) || echo "     (git lfs pull reported an issue for $mdir)"
             rm -rf "$target/.git"
