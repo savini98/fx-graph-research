@@ -237,41 +237,41 @@ build_envs() {
 # --------------------------------------------------------------------------- #
 # 4. Pre-download weights for models whose run_*.sh expect a local dir
 # --------------------------------------------------------------------------- #
-predownload_weights() {
-    banner "Step 4/6  Pre-download local model weights"
+# Download ONE model's weights on demand, right before it runs (and they are
+# deleted right after by reclaim_weights). This keeps at most one model's
+# weights on disk at a time — essential on a disk-limited box.
+# Only the PREDOWNLOAD models need this; the rest self-clone or pull from the hub.
+ensure_weights() {
+    local mdir="$1" entry m url dest
     for entry in "${PREDOWNLOAD[@]}"; do
-        IFS='|' read -r mdir url dest <<<"$entry"
-        # Only download models that are actually scheduled to run.
-        local scheduled=0
-        for m in "${MODELS[@]}"; do [ "$m" = "$mdir" ] && scheduled=1; done
-        [ "$scheduled" -eq 1 ] || continue
-
+        IFS='|' read -r m url dest <<<"$entry"
+        [ "$m" = "$mdir" ] || continue
         local target="$REPO_DIR/models/$mdir/$dest"
         # Consider weights "real" only if a >1MB .bin/.safetensors exists
         # (git-LFS pointer files are a few hundred bytes — those don't count).
         if [ -d "$target" ] && find "$target" \( -name '*.safetensors' -o -name '*.bin' \) -size +1M 2>/dev/null | grep -q .; then
-            echo ">> $mdir: real weights already present at $target — skipping."
-            continue
+            echo "   ⤓ weights already present for $mdir"
+            return 0
         fi
-        echo ">> $mdir: cloning $url -> $target"
+        echo "   ⤓ downloading weights for $mdir ($url)"
         rm -rf "$target"
         if git clone "$url" "$target"; then
             ( cd "$target" && git lfs install >/dev/null 2>&1 && git lfs pull ) \
-                || echo "   (git lfs pull reported an issue for $mdir)"
-            # Strip bloat: git metadata holds a duplicate LFS object cache, and
-            # HF repos ship TF/Flax copies PyTorch never uses.
+                || echo "     (git lfs pull reported an issue for $mdir)"
+            # Strip bloat: .git holds a duplicate LFS object cache; HF repos ship
+            # TF/Flax copies PyTorch never uses.
             rm -rf "$target/.git"
             find "$target" \( -name '*.h5' -o -name '*.msgpack' -o -name '*.ot' \) -delete 2>/dev/null
-            # If safetensors exist, the .bin is redundant (and avoids weights_only path).
             if ls "$target"/*.safetensors >/dev/null 2>&1; then
                 find "$target" -name '*.bin' -delete 2>/dev/null
             fi
             local wf; wf="$(find "$target" \( -name '*.safetensors' -o -name '*.bin' \) -size +1M 2>/dev/null | head -1)"
-            if [ -n "$wf" ]; then echo "   ok: $(du -sh "$target" | cut -f1) ($(basename "$wf"))"; \
-            else echo "   !! $mdir still has no real weights — it will error at runtime."; fi
+            if [ -n "$wf" ]; then echo "     ok: $(du -sh "$target" | cut -f1) ($(basename "$wf"))"; \
+            else echo "     !! $mdir still has no real weights — it will error at runtime."; fi
         else
-            echo "   !! Failed to clone $mdir weights — that model will error at runtime."
+            echo "     !! Failed to clone $mdir weights — that model will error at runtime."
         fi
+        return 0
     done
 }
 
@@ -294,6 +294,8 @@ reclaim_weights() {
     done
     # Prune the HF hub cache too (each model uses its own entry; nothing shares).
     rm -rf "$HF_HOME/hub" 2>/dev/null
+    # Clear the inductor compile cache — it accumulates GBs across models.
+    rm -rf /tmp/torchinductor_* 2>/dev/null
 }
 
 run_models() {
@@ -313,6 +315,9 @@ run_models() {
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo "  ▶ $model   ($(basename "$run_script"))   $(date +%H:%M:%S)"
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+        # Download this model's weights on demand (deleted right after by reclaim).
+        ensure_weights "$model"
 
         # Subshell + cd so scripts that assume cwd==their dir still work.
         if ( cd "$model_dir" && bash "$(basename "$run_script")" ); then
@@ -374,7 +379,8 @@ main() {
     bootstrap_conda
     ensure_git_lfs
     build_envs
-    predownload_weights
+    # Weights are now fetched per-model inside run_models (download-then-delete),
+    # so the disk only ever holds one model's weights at a time.
     run_models
     print_summary
 }
