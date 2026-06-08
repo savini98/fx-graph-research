@@ -290,12 +290,28 @@ def main():
     torch.cuda.empty_cache()
 
     compiled = compile_model(model)
+    import time as _time
+    torch.cuda.synchronize()
+    _cold_t0 = _time.perf_counter()
     warmup(compiled, batch, iters=1)
+    torch.cuda.synchronize()
+    print(f"Cold start (compile): {(_time.perf_counter() - _cold_t0) * 1000:.1f} ms")
 
     dt_str = datetime.now().strftime("%Y%m%d_%H%M%S")
     safe_model_id = os.path.basename(MODEL_ID)
     trace_path = os.path.join(TRACES_DIR, f"{safe_model_id}_trace_{TYPE}_{dt_str}.json")
     hit, names = detect_cudagraphs(compiled, batch, trace=trace_path)
+    try:
+        import json as _json
+        with open(trace_path) as _tf:
+            _tr = _json.load(_tf)
+        _evs = _tr.get("traceEvents", _tr if isinstance(_tr, list) else [])
+        _launch = sum(1 for _e in _evs if isinstance(_e, dict) and "cudaGraphLaunch" in _e.get("name", ""))
+        _kern = sum(1 for _e in _evs if isinstance(_e, dict) and _e.get("cat", "") == "kernel")
+        print(f"CUDA graph launches: {_launch}")
+        print(f"Kernel count: {_kern}")
+    except Exception as _ex:
+        print(f"trace metric counting failed: {_ex}")
     if hit:
         t("✅ CUDA Graph activity detected:")
         for n in names: print("  -", n)

@@ -142,6 +142,19 @@ def generate_text(
         return text, {"runtime_s": runtime_s, "new_tokens": num_tokens, "throughput_tps": toks_per_s}
     return text
 
+
+def print_graph_breaks(model, inp):
+    t("checking Dynamo graph breaks\u2026")
+    try:
+        import torch._dynamo as dynamo
+        explanation = dynamo.explain(model)(**inp)
+        print("\n===== Graph Break Report =====")
+        print(f"Graph break count: {explanation.graph_break_count}")
+        print(f"Number of graphs:  {explanation.graph_count}")
+        print("=" * 35)
+    except Exception as e:
+        t(f"graph-break analysis failed: {e}")
+
 def main():
 
     parser = argparse.ArgumentParser()
@@ -183,12 +196,29 @@ def main():
     # NEW: inspect graph breaks on the eager model before compiling
     # print_graph_breaks(model, batch)
 
+    print_graph_breaks(model, batch)
     compiled = compile_model(model)
+    import time as _time
+    torch.cuda.synchronize()
+    _cold_t0 = _time.perf_counter()
     warmup(compiled, batch, iters=1)
+    torch.cuda.synchronize()
+    print(f"Cold start (compile): {(_time.perf_counter() - _cold_t0) * 1000:.1f} ms")
 
     dt_str = datetime.now().strftime("%Y%m%d_%H%M%S")
     trace_path = f"traces/{MODEL_ID}_trace_{TYPE}_{dt_str}.json"
     hit, names = detect_cudagraphs(compiled, batch, trace=trace_path)
+    try:
+        import json as _json
+        with open(trace_path) as _tf:
+            _tr = _json.load(_tf)
+        _evs = _tr.get("traceEvents", _tr if isinstance(_tr, list) else [])
+        _launch = sum(1 for _e in _evs if isinstance(_e, dict) and "cudaGraphLaunch" in _e.get("name", ""))
+        _kern = sum(1 for _e in _evs if isinstance(_e, dict) and _e.get("cat", "") == "kernel")
+        print(f"CUDA graph launches: {_launch}")
+        print(f"Kernel count: {_kern}")
+    except Exception as _ex:
+        print(f"trace metric counting failed: {_ex}")
     if hit:
         t("✅ CUDA Graph activity detected:")
         for n in names: print("  -", n)
